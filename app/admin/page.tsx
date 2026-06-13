@@ -234,7 +234,7 @@ export default function AdminDashboard() {
               </div>
             </div>
 
-            <h2 style={{ color: '#fff', fontSize: '1.1rem', marginBottom: 16, fontWeight: 700 }}>Top 10 Thương hiệu được click nhiều nhất</h2>
+            <h2 style={{ color: '#0ea5e9', fontSize: '1.1rem', marginBottom: 16, fontWeight: 700 }}>Top 10 Thương hiệu được click nhiều nhất</h2>
             <div className={styles.topList}>
               {stats.topClicked.map((b, i) => (
                 <div key={b.id} className={styles.topItem}>
@@ -243,7 +243,7 @@ export default function AdminDashboard() {
                   <div className={styles.topCount}>{b.click_count} clicks</div>
                 </div>
               ))}
-              {stats.topClicked.length === 0 && <div className={styles.empty}>Chưa có dữ liệu</div>}
+              {stats.topClicked.length === 0 && <div className={styles.empty} style={{ color: '#0ea5e9' }}>Chưa có dữ liệu</div>}
             </div>
           </>
         )}
