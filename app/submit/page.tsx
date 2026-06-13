@@ -3,6 +3,44 @@ import { useState } from 'react';
 import Link from 'next/link';
 import styles from './page.module.css';
 
+const resizeImage = (file: File, size: number): Promise<Blob> => {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      const ratio = img.width / img.height;
+      if (ratio > 1.8 || ratio < 0.55) {
+        return reject(new Error('Logo phải có tỷ lệ gần vuông (không chấp nhận ảnh ngang/dọc quá mức)'));
+      }
+
+      const canvas = document.createElement('canvas');
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return reject(new Error('Lỗi tạo canvas'));
+      
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillRect(0, 0, size, size);
+      
+      const scale = Math.min(size / img.width, size / img.height);
+      const w = img.width * scale;
+      const h = img.height * scale;
+      const x = (size - w) / 2;
+      const y = (size - h) / 2;
+      
+      ctx.drawImage(img, x, y, w, h);
+      
+      canvas.toBlob((blob) => {
+        if (blob) resolve(blob);
+        else reject(new Error('Lỗi xuất ảnh WebP'));
+      }, 'image/webp', 0.9);
+    };
+    img.onerror = () => reject(new Error('Không thể đọc file ảnh'));
+    img.src = url;
+  });
+};
+
 export default function SubmitPage() {
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
@@ -16,6 +54,13 @@ export default function SubmitPage() {
       const file = fd.get('file') as File;
       if (!file || file.size === 0) throw new Error('Vui lòng chọn logo');
       if (file.size > 2 * 1024 * 1024) throw new Error('Logo không được vượt quá 2MB');
+
+      // Xử lý ảnh ở phía Client để tránh Vercel timeout và lỗi thư viện sharp
+      const [blob64, blob128, blob256] = await Promise.all([
+        resizeImage(file, 64),
+        resizeImage(file, 128),
+        resizeImage(file, 256)
+      ]);
 
       const res = await fetch('/api/submit', {
         method: 'POST',
@@ -38,8 +83,10 @@ export default function SubmitPage() {
       if (!res.ok) throw new Error(submitData.error || 'Lỗi không xác định khi đăng ký');
 
       const uploadFd = new FormData();
-      uploadFd.append('file', file);
       uploadFd.append('brandId', submitData.brand.id);
+      uploadFd.append('file_64', blob64, '64.webp');
+      uploadFd.append('file_128', blob128, '128.webp');
+      uploadFd.append('file_256', blob256, '256.webp');
       
       const uploadRes = await fetch('/api/upload', { method: 'POST', body: uploadFd });
       let uploadData;
