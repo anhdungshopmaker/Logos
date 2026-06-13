@@ -35,35 +35,35 @@ export default function EditBrandPage({ params }: { params: Promise<{ id: string
   };
 
   const inputStyle: React.CSSProperties = {
-    width: '100%', padding: '10px 12px', background: '#0f0f10',
-    border: '1.5px solid #2a2a30', borderRadius: 8, color: '#fff',
+    width: '100%', padding: '10px 12px', background: '#f8f9fb',
+    border: '1.5px solid #e5e7eb', borderRadius: 8, color: '#111',
     fontSize: '0.95rem', fontFamily: 'inherit', outline: 'none',
   };
 
-  const labelStyle: React.CSSProperties = { display: 'block', fontSize: '0.82rem', color: '#888', marginBottom: 6, fontWeight: 600 };
+  const labelStyle: React.CSSProperties = { display: 'block', fontSize: '0.82rem', color: '#555', marginBottom: 6, fontWeight: 600 };
   const fieldStyle: React.CSSProperties = { marginBottom: 16 };
 
-  if (loading) return <div style={{ padding: 40, color: '#fff', background: '#0f0f10', minHeight: '100vh' }}>Đang tải...</div>;
-  if (!brand) return <div style={{ padding: 40, color: '#fff' }}>Không tìm thấy thương hiệu.</div>;
+  if (loading) return <div style={{ padding: 40, color: '#333', background: '#f0f2f5', minHeight: '100vh' }}>Đang tải...</div>;
+  if (!brand) return <div style={{ padding: 40, color: '#333' }}>Không tìm thấy thương hiệu.</div>;
 
   const logoUrl = brand.logo_uploads?.[0]?.url_128;
 
   return (
-    <div style={{ minHeight: '100vh', background: '#0f0f10', color: '#e5e5e7', padding: 32, fontFamily: 'var(--font, system-ui)' }}>
+    <div style={{ minHeight: '100vh', background: '#f0f2f5', color: '#111', padding: 32, fontFamily: 'var(--font, system-ui)' }}>
       <div style={{ maxWidth: 700, margin: '0 auto' }}>
-        <Link href="/admin" style={{ color: '#888', marginBottom: 24, display: 'inline-block' }}>← Quay lại Admin</Link>
-        <h1 style={{ fontSize: '1.6rem', fontWeight: 700, color: '#fff', marginBottom: 24 }}>✏️ Chỉnh sửa: {brand.name}</h1>
+        <Link href="/admin" style={{ color: '#666', marginBottom: 24, display: 'inline-block' }}>← Quay lại Admin</Link>
+        <h1 style={{ fontSize: '1.6rem', fontWeight: 700, color: '#111', marginBottom: 24 }}>✏️ Chỉnh sửa: {brand.name}</h1>
 
-        {msg && <div style={{ padding: 12, background: '#1a1a1e', borderRadius: 8, marginBottom: 16, color: msg.startsWith('✅') ? '#10b981' : '#ef4444' }}>{msg}</div>}
+        {msg && <div style={{ padding: 12, background: '#fff', border: '1px solid #e5e7eb', borderRadius: 8, marginBottom: 16, color: msg.startsWith('✅') ? '#059669' : '#dc2626' }}>{msg}</div>}
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
           <div style={{ gridColumn: '1 / -1', display: 'flex', alignItems: 'center', gap: 16, marginBottom: 8 }}>
             {logoUrl
               // eslint-disable-next-line @next/next/no-img-element
-              ? <img src={logoUrl} alt="" style={{ width: 64, height: 64, borderRadius: 12, objectFit: 'contain', background: '#fff', border: '1px solid #333' }} />
-              : <div style={{ width: 64, height: 64, borderRadius: 12, background: '#1a1a1e', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.8rem', color: '#555' }}>{brand.name?.charAt(0)}</div>}
+              ? <img src={logoUrl} alt="" style={{ width: 64, height: 64, borderRadius: 12, objectFit: 'contain', background: '#fff', border: '1px solid #e5e7eb' }} />
+              : <div style={{ width: 64, height: 64, borderRadius: 12, background: '#e5e7eb', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.8rem', color: '#aaa' }}>{brand.name?.charAt(0)}</div>}
             <div>
-              <div style={{ color: '#fff', fontWeight: 700 }}>{brand.name}</div>
+              <div style={{ color: '#111', fontWeight: 700 }}>{brand.name}</div>
               <div style={{ color: '#666', fontSize: '0.85rem' }}>/{brand.slug}</div>
             </div>
           </div>
