@@ -73,6 +73,16 @@ export default function AdminDashboard() {
     setBrands(prev => prev.filter(b => tab === 'pending' ? b.id !== brandId : true).map(b => b.id === brandId ? { ...b, status } : b));
   };
 
+  const handleDelete = async (brandId: string) => {
+    if (!window.confirm('Bạn có chắc chắn muốn xóa vĩnh viễn thương hiệu này khỏi hệ thống? Hành động này không thể hoàn tác.')) return;
+    await fetch('/api/admin/delete', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ brandId }),
+    });
+    setBrands(prev => prev.filter(b => b.id !== brandId));
+  };
+
   const handlePriority = async (brandId: string, packageType: string) => {
     const pkg = PACKAGE_OPTIONS.find(p => p.value === packageType);
     await fetch('/api/admin/update', {
@@ -212,6 +222,7 @@ export default function AdminDashboard() {
                         <div className={styles.actions}>
                           {b.status !== 'approved' && <button className={styles.approveBtn} onClick={() => handleStatus(b.id, 'approved')}>✅ Duyệt</button>}
                           {b.status !== 'rejected' && <button className={styles.rejectBtn} onClick={() => handleStatus(b.id, 'rejected')}>❌ Từ chối</button>}
+                          {tab === 'rejected' && <button className={styles.deleteBtn} onClick={() => handleDelete(b.id)}>🗑️ Xóa vĩnh viễn</button>}
                           <Link href={`/admin/brands/${b.id}`} className={styles.editBtn}>✏️ Sửa</Link>
                         </div>
                       </td>
