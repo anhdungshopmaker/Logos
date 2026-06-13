@@ -1,0 +1,64 @@
+.overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.45);
+  z-index: 100; display: flex; align-items: flex-end;
+  animation: fadeIn 0.2s ease;
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.panel {
+  background: #fff; border-radius: 24px 24px 0 0;
+  padding: 24px; width: 100%; max-height: 90vh;
+  overflow-y: auto; animation: slideUp 0.3s ease;
+}
+@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+.handle {
+  width: 40px; height: 4px; background: #ddd;
+  border-radius: 2px; margin: 0 auto 20px;
+}
+
+.logoWrap {
+  width: 80px; height: 80px; border-radius: 16px;
+  border: 1px solid #eee; overflow: hidden; margin: 0 auto 16px;
+  display: flex; align-items: center; justify-content: center;
+}
+.logoWrap img { width: 100%; height: 100%; object-fit: contain; }
+
+.placeholder {
+  width: 100%; height: 100%; display: flex; align-items: center;
+  justify-content: center; background: #f5f5f7;
+  font-size: 2rem; font-weight: 700; color: #aaa;
+}
+
+.name { font-size: 1.4rem; font-weight: 700; text-align: center; margin-bottom: 6px; }
+
+.meta {
+  display: flex; gap: 12px; justify-content: center;
+  color: #6e6e73; font-size: 0.9rem; margin-bottom: 20px; flex-wrap: wrap;
+}
+
+.desc { color: #444; line-height: 1.6; margin-bottom: 20px; font-size: 0.95rem; }
+
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+.grid3 { display: flex; gap: 8px; margin-bottom: 20px; }
+
+.btn {
+  display: flex; align-items: center; justify-content: center;
+  padding: 12px 8px; border-radius: 10px; font-size: 0.85rem;
+  font-weight: 600; text-align: center; border: 1.5px solid #e5e5e7;
+  color: #333; transition: background 0.15s; text-decoration: none;
+  cursor: pointer;
+}
+.btn:hover { background: #f5f5f7; }
+
+.shareBtn { flex: 1; }
+.fbBtn { background: #1877F2 !important; color: #fff !important; border-color: #1877F2 !important; }
+.zaloBtn { background: #0068FF !important; color: #fff !important; border-color: #0068FF !important; }
+
+.primaryBtn {
+  display: block; width: 100%; padding: 16px;
+  background: #111; color: #fff; border-radius: 12px;
+  font-weight: 600; font-size: 1rem; text-align: center;
+  text-decoration: none; transition: background 0.2s;
+}
+.primaryBtn:hover { background: #000; }
