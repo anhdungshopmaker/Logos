@@ -46,10 +46,10 @@ export default function AdminDashboard() {
   useEffect(() => {
     if (tab === 'stats') {
       Promise.all([
-        supabase.from('brands').select('id', { count: 'exact', head: true }),
+        supabase.from('brands').select('id', { count: 'exact', head: true }).neq('status', 'rejected'),
         supabase.from('brands').select('id', { count: 'exact', head: true }).eq('status', 'pending'),
         supabase.from('brands').select('id', { count: 'exact', head: true }).eq('status', 'approved'),
-        supabase.from('brands').select('id, name, click_count').order('click_count', { ascending: false }).limit(10),
+        supabase.from('brands').select('id, name, click_count').eq('status', 'approved').order('click_count', { ascending: false }).limit(10),
       ]).then(([all, pend, appr, top]) => {
         setStats({
           total: all.count || 0,
