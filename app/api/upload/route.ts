@@ -26,17 +26,19 @@ export async function POST(req: NextRequest) {
     const supabase = await createClient();
     const urls: Record<string, string> = {};
 
-    for (const size of [64, 128, 256]) {
+    await Promise.all([64, 128, 256].map(async (size) => {
       const resized = await sharp(buffer)
         .resize({ width: size, height: size, fit: 'contain', background: { r: 255, g: 255, b: 255, alpha: 1 } })
         .webp({ quality: 90 })
         .toBuffer();
 
       const fileName = `${brandId}/${size}.webp`;
-      await supabase.storage.from('logos').upload(fileName, resized, { contentType: 'image/webp', upsert: true });
+      const { error: uploadError } = await supabase.storage.from('logos').upload(fileName, resized, { contentType: 'image/webp', upsert: true });
+      if (uploadError) throw new Error(`Lỗi tải ảnh ${size}: ${uploadError.message}`);
+      
       const { data } = supabase.storage.from('logos').getPublicUrl(fileName);
       urls[`url_${size}`] = data.publicUrl;
-    }
+    }));
 
     await supabase.from('logo_uploads').insert({
       brand_id: brandId,

@@ -26,15 +26,31 @@ export default function SubmitPage() {
           fanpage: fd.get('fanpage'), phone: fd.get('phone'), google_maps_url: fd.get('google_maps_url'),
         }),
       });
-      const submitData = await res.json();
-      if (!res.ok) throw new Error(submitData.error);
+      
+      let submitData;
+      const submitText = await res.text();
+      try {
+        submitData = JSON.parse(submitText);
+      } catch {
+        throw new Error(`Lỗi hệ thống (Submit ${res.status}): Không thể xử lý phản hồi từ server.`);
+      }
+
+      if (!res.ok) throw new Error(submitData.error || 'Lỗi không xác định khi đăng ký');
 
       const uploadFd = new FormData();
       uploadFd.append('file', file);
       uploadFd.append('brandId', submitData.brand.id);
+      
       const uploadRes = await fetch('/api/upload', { method: 'POST', body: uploadFd });
-      const uploadData = await uploadRes.json();
-      if (!uploadRes.ok) throw new Error(uploadData.error);
+      let uploadData;
+      const uploadText = await uploadRes.text();
+      try {
+        uploadData = JSON.parse(uploadText);
+      } catch {
+        throw new Error(`Lỗi hệ thống (Upload ${uploadRes.status}): Không thể xử lý phản hồi từ server.`);
+      }
+
+      if (!uploadRes.ok) throw new Error(uploadData.error || 'Lỗi không xác định khi tải ảnh');
 
       setMsg({ type: 'success', text: 'Đăng ký thành công! Thương hiệu đang chờ duyệt.' });
       (e.target as HTMLFormElement).reset();
