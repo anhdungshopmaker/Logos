@@ -13,7 +13,7 @@ const PACKAGE_OPTIONS = [
 ];
 
 export default function AdminDashboard() {
-  const [tab, setTab] = useState<'pending' | 'all' | 'stats'>('pending');
+  const [tab, setTab] = useState<'pending' | 'all' | 'rejected' | 'stats'>('pending');
   const [brands, setBrands] = useState<any[]>([]);
   const [stats, setStats] = useState({ total: 0, pending: 0, approved: 0, topClicked: [] as any[] });
   const [loading, setLoading] = useState(true);
@@ -23,12 +23,15 @@ export default function AdminDashboard() {
 
   const loadData = useCallback(async () => {
     setLoading(true);
-    const filter = tab === 'pending' ? 'pending' : undefined;
     let query = supabase
       .from('brands')
       .select('*, logo_uploads(url_64)')
       .order('created_at', { ascending: false });
-    if (filter) query = query.eq('status', filter);
+      
+    if (tab === 'pending') query = query.eq('status', 'pending');
+    else if (tab === 'rejected') query = query.eq('status', 'rejected');
+    else if (tab === 'all') query = query.neq('status', 'rejected');
+    
     const { data } = await query;
     setBrands(data || []);
     setLoading(false);
@@ -96,6 +99,9 @@ export default function AdminDashboard() {
         <button className={`${styles.navItem} ${tab === 'all' ? styles.active : ''}`} onClick={() => setTab('all')}>
           📋 Tất cả thương hiệu
         </button>
+        <button className={`${styles.navItem} ${tab === 'rejected' ? styles.active : ''}`} onClick={() => setTab('rejected')}>
+          🗑️ Đã từ chối
+        </button>
         <button className={`${styles.navItem} ${tab === 'stats' ? styles.active : ''}`} onClick={() => setTab('stats')}>
           📊 Thống kê
         </button>
@@ -158,10 +164,11 @@ export default function AdminDashboard() {
           </>
         )}
 
-        {tab === 'all' && (
+        {(tab === 'all' || tab === 'rejected') && (
           <>
-            <h1 className={styles.pageTitle}>Tất cả Thương Hiệu</h1>
+            <h1 className={styles.pageTitle}>{tab === 'all' ? 'Tất cả Thương Hiệu' : 'Đã từ chối'}</h1>
             {loading ? <div className={styles.empty}>Đang tải...</div> :
+              brands.length === 0 ? <div className={styles.empty}>Không có dữ liệu</div> :
               <table className={styles.table}>
                 <thead>
                   <tr>
