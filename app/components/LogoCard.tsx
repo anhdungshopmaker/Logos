@@ -19,6 +19,7 @@ export default function LogoCard({ brand, onClick }: Props) {
           {brand.name?.charAt(0)?.toUpperCase() || '?'}
         </div>
       )}
+      <div className={styles.infoIcon}>i</div>
     </div>
   );
 }
