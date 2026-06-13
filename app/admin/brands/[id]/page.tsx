@@ -61,7 +61,7 @@ export default function EditBrandPage({ params }: { params: Promise<{ id: string
             {logoUrl
               // eslint-disable-next-line @next/next/no-img-element
               ? <img src={logoUrl} alt="" style={{ width: 64, height: 64, borderRadius: 12, objectFit: 'contain', background: '#fff', border: '1px solid #e5e7eb' }} />
-              : <div style={{ width: 64, height: 64, borderRadius: 12, background: '#e5e7eb', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.8rem', color: '#aaa' }}>{brand.name?.charAt(0)}</div>}
+              : <div style={{ width: 64, height: 64, borderRadius: 12, background: '#e5e7eb', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.8rem', color: '#666' }}>{brand.name?.charAt(0)}</div>}
             <div>
               <div style={{ color: '#111', fontWeight: 700 }}>{brand.name}</div>
               <div style={{ color: '#666', fontSize: '0.85rem' }}>/{brand.slug}</div>
