@@ -28,11 +28,10 @@ export default function SubmitPage() {
 
       const res = await fetch('/api/submit', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: fd.get('name'), province: fd.get('province'), industry: fd.get('industry'),
           description: fd.get('description'), website: fd.get('website'),
-          fanpage: fd.get('fanpage'), phone: fd.get('phone'), google_maps_url: fd.get('google_maps_url'),
+          fanpage: fd.get('fanpage'), phone: fd.get('phone'), zalo: fd.get('zalo'), google_maps_url: fd.get('google_maps_url'),
           turnstileToken: fd.get('cf-turnstile-response')
         }),
       });
@@ -97,7 +96,11 @@ export default function SubmitPage() {
           <input name="fanpage" type="url" className={styles.input} placeholder="https://facebook.com/..." /></div>
         <div className={styles.field}><label className={styles.label}>Số điện thoại</label>
           <input name="phone" type="tel" className={styles.input} placeholder="090..." /></div>
-        <div className={styles.field}><label className={styles.label}>Google Maps URL</label>
+        
+        <div className={styles.field}><label className={styles.label}>Số điện thoại Zalo (để kết nối Chat)</label>
+          <input name="zalo" type="tel" className={styles.input} placeholder="090..." /></div>
+        
+        <div className={styles.field}><label className={styles.label}>Google Maps (Link ngắn gọn)</label>
           <input name="google_maps_url" type="url" className={styles.input} placeholder="https://maps.app.goo.gl/..." /></div>
         
         <div style={{ margin: '15px 0' }}>

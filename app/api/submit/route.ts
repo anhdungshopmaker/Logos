@@ -17,7 +17,7 @@ async function verifyTurnstile(token: string) {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { name, province, industry, description, website, fanpage, phone, google_maps_url, turnstileToken } = body;
+    const { name, province, industry, description, website, fanpage, phone, zalo, google_maps_url, turnstileToken } = body;
     if (!name) return NextResponse.json({ error: 'Tên thương hiệu là bắt buộc' }, { status: 400 });
 
     const isValid = await verifyTurnstile(turnstileToken || '');
@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
       .insert({ 
         owner_id: user?.id || null,
         slug: finalSlug, 
-        name, province, industry, description, website, fanpage, phone, google_maps_url, 
+        name, province, industry, description, website, fanpage, phone, zalo, google_maps_url, 
         status: 'pending', priority: 1, package_type: 'free' 
       })
       .select().single();

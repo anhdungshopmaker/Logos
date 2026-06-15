@@ -78,11 +78,16 @@ export default function InfoPanel({ brand, onClose, mode = 'mobile' }: Props) {
           {brand.fanpage && (
             <a href={brand.fanpage} target="_blank" rel="noopener noreferrer" className={styles.btn} style={{ background: '#eef2ff', color: '#4f46e5' }}>👍 Fanpage</a>
           )}
+          {brand.zalo && (
+            <a href={`https://zalo.me/${brand.zalo.replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer" className={styles.btn} style={{ background: '#e0f2fe', color: '#0ea5e9' }}>💬 Chat Zalo</a>
+          )}
         </div>
 
         <div className={styles.grid2} style={{ marginTop: 8 }}>
-          <button onClick={handleCopy} className={styles.btn}>🔗 Copy Link</button>
-          <a href={`https://zalo.me/share?url=${encodeURIComponent(brandUrl)}`} target="_blank" rel="noopener noreferrer" className={styles.btn} style={{ background: '#e0f2fe', color: '#0284c7' }}>Zalo Share</a>
+          <button className={styles.btn} onClick={() => {
+            navigator.clipboard.writeText(`https://logo.dichvupro.net/brand/${brand.slug}`);
+            alert('Đã copy link!');
+          }}>🔗 Copy Link</button>
         </div>
 
         <Link href={`/brand/${brand.slug}`} className={styles.primaryBtn}>
