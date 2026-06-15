@@ -35,3 +35,39 @@ export const resizeImage = (file: File, size: number): Promise<Blob> => {
     img.src = url;
   });
 };
+
+export const resizeCoverImage = (file: File, width: number = 1200, height: number = 400): Promise<Blob> => {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return reject(new Error('Lỗi tạo canvas'));
+      
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillRect(0, 0, width, height);
+      
+      // object-fit: cover logic
+      const scale = Math.max(width / img.width, height / img.height);
+      const w = img.width * scale;
+      const h = img.height * scale;
+      const x = (width - w) / 2;
+      const y = (height - h) / 2;
+      
+      ctx.drawImage(img, x, y, w, h);
+      
+      canvas.toBlob((blob) => {
+        if (blob) resolve(blob);
+        else reject(new Error('Lỗi xuất ảnh WebP'));
+      }, 'image/webp', 0.9);
+    };
+    img.onerror = () => reject(new Error('Không thể đọc file ảnh cover'));
+    img.src = url;
+  });
+};
+

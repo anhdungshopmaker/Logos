@@ -23,17 +23,42 @@ export default async function BrandPage({ params }: Props) {
   const { data: brand } = await supabase
     .from('brands').select('*, logo_uploads(url_128, url_256)').eq('slug', slug).single();
   if (!brand) notFound();
-  const logoUrl = brand.logo_uploads?.[0]?.url_256 || brand.logo_uploads?.[0]?.url_128 || '';
+  
+  const uploads = brand.logo_uploads || [];
+  const latestLogo = uploads[uploads.length - 1];
+  const logoUrl = latestLogo?.url_256 || latestLogo?.url_128 || '';
+
+  // Generate JSON-LD
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'LocalBusiness',
+    name: brand.name,
+    image: logoUrl || undefined,
+    description: brand.description || undefined,
+    telephone: brand.phone || undefined,
+    url: brand.website || undefined,
+    address: brand.province ? {
+      '@type': 'PostalAddress',
+      addressRegion: brand.province,
+      addressCountry: 'VN'
+    } : undefined
+  };
 
   return (
     <div className={styles.container}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <Link href="/" className={styles.back}>← Quay lại Brand Wall</Link>
       <div className={styles.card}>
+        {brand.cover_url && (
+          <div style={{ width: '100%', height: 160, borderRadius: '24px 24px 0 0', overflow: 'hidden', marginBottom: '-40px' }}>
+            <img src={brand.cover_url} alt="Cover" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+          </div>
+        )}
         <div className={styles.header}>
-          <div className={styles.logoWrap}>
+          <div className={styles.logoWrap} style={{ position: 'relative', zIndex: 2, background: '#fff', border: '4px solid #fff', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
             {logoUrl
               // eslint-disable-next-line @next/next/no-img-element
-              ? <img src={logoUrl} alt={brand.name} className={styles.logo} />
+              ? <img src={logoUrl} alt={brand.name} className={styles.logo} style={{ objectFit: 'contain' }} />
               : <div className={styles.ph}>{brand.name?.charAt(0)}</div>}
           </div>
           <h1 className={styles.name}>{brand.name}</h1>

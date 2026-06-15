@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/utils/supabase/client';
-import { resizeImage } from '@/utils/image';
+import { resizeImage, resizeCoverImage } from '@/utils/image';
 
 export default function UserEditBrandPage({ params }: { params: Promise<{ id: string }> }) {
   const [brand, setBrand] = useState<any>(null);
@@ -13,6 +13,8 @@ export default function UserEditBrandPage({ params }: { params: Promise<{ id: st
   const [msg, setMsg] = useState('');
   const [newLogo, setNewLogo] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
+  const [newCover, setNewCover] = useState<File | null>(null);
+  const [coverPreview, setCoverPreview] = useState<string | null>(null);
   const supabase = createClient();
   const router = useRouter();
 
@@ -56,6 +58,19 @@ export default function UserEditBrandPage({ params }: { params: Promise<{ id: st
           let errData;
           try { errData = JSON.parse(text); } catch { throw new Error('Lỗi server khi upload ảnh'); }
           throw new Error(errData.error || 'Lỗi upload ảnh');
+        }
+      }
+
+      if (newCover) {
+        if (newCover.size > 5 * 1024 * 1024) throw new Error('Ảnh bìa không được vượt quá 5MB');
+        const coverBlob = await resizeCoverImage(newCover, 1200, 400);
+        const coverFd = new FormData();
+        coverFd.append('brandId', brand.id);
+        coverFd.append('cover', coverBlob, 'cover.webp');
+
+        const coverRes = await fetch('/api/upload-cover', { method: 'POST', body: coverFd });
+        if (!coverRes.ok) {
+          throw new Error('Lỗi upload ảnh bìa');
         }
       }
 
@@ -120,6 +135,26 @@ export default function UserEditBrandPage({ params }: { params: Promise<{ id: st
                     if (e.target.files && e.target.files[0]) {
                       setNewLogo(e.target.files[0]);
                       setLogoPreview(URL.createObjectURL(e.target.files[0]));
+                    }
+                  }} />
+                </label>
+              </div>
+            </div>
+
+            <div style={{ gridColumn: '1 / -1', display: 'flex', alignItems: 'center', gap: 16, marginBottom: 16, paddingBottom: 16, borderBottom: '1px solid #f3f4f6' }}>
+              {(coverPreview || brand.cover_url)
+                // eslint-disable-next-line @next/next/no-img-element
+                ? <img src={coverPreview || brand.cover_url} alt="Cover" style={{ width: 160, height: 60, borderRadius: 8, objectFit: 'cover', border: '1px solid #e5e7eb' }} />
+                : <div style={{ width: 160, height: 60, borderRadius: 8, background: '#f3f4f6', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.9rem', color: '#9ca3af' }}>Chưa có ảnh bìa</div>}
+              <div>
+                <div style={{ color: '#111', fontWeight: 700, fontSize: '1.1rem' }}>Ảnh Bìa (Cover Image)</div>
+                <div style={{ color: '#6b7280', fontSize: '0.85rem', marginBottom: 8 }}>Kích thước chuẩn (Tỉ lệ 3:1, Tối đa 5MB)</div>
+                <label style={{ fontSize: '0.85rem', cursor: 'pointer', background: '#f3f4f6', padding: '6px 12px', borderRadius: 6, fontWeight: 600, color: '#374151', display: 'inline-block' }}>
+                  Tải ảnh bìa mới
+                  <input type="file" accept="image/*" style={{ display: 'none' }} onChange={e => {
+                    if (e.target.files && e.target.files[0]) {
+                      setNewCover(e.target.files[0]);
+                      setCoverPreview(URL.createObjectURL(e.target.files[0]));
                     }
                   }} />
                 </label>

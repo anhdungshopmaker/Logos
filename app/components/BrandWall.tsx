@@ -10,21 +10,27 @@ import Link from 'next/link';
 const PAGE_SIZE = 100;
 const GAP = 10;
 
-function useCols() {
+function useCols(hasSidePanel: boolean) {
   const [cols, setCols] = useState(4);
   useEffect(() => {
     const update = () => {
       const w = window.innerWidth;
-      if (w >= 1280) setCols(10);
-      else if (w >= 1024) setCols(8);
-      else if (w >= 768) setCols(6);
-      else if (w >= 480) setCols(5);
-      else setCols(4);
+      // If side panel is open, grid width is ~70% (e.g. 1280 * 0.7 = ~900px)
+      // We want logos to be ~130-150px
+      const isDesktop = w >= 1025;
+      const effectiveW = (isDesktop && hasSidePanel) ? w - 380 : w;
+      
+      if (effectiveW >= 1200) setCols(8);
+      else if (effectiveW >= 1000) setCols(7);
+      else if (effectiveW >= 800) setCols(6);
+      else if (effectiveW >= 600) setCols(5);
+      else if (effectiveW >= 400) setCols(4);
+      else setCols(3);
     };
     update();
     window.addEventListener('resize', update);
     return () => window.removeEventListener('resize', update);
-  }, []);
+  }, [hasSidePanel]);
   return cols;
 }
 
@@ -41,7 +47,7 @@ export default function BrandWall({
   const [user, setUser] = useState<any>(null);
   const supabase = createClient();
   const parentRef = useRef<HTMLDivElement>(null);
-  const cols = useCols();
+  const cols = useCols(!!selected);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => setUser(data.user));
@@ -110,53 +116,70 @@ export default function BrandWall({
         <span className={styles.logo}>🇻🇳 Brand Wall</span>
         <input
           className={styles.search}
-          placeholder="Tìm thương hiệu..."
+          placeholder="🔍 Tìm spa, nail, khách sạn, nhà hàng..."
           value={search}
           onChange={e => setSearch(e.target.value)}
         />
+        <div style={{ flex: 1 }} />
         <Link href="/submit" className={styles.submitBtn}>+ Đăng ký</Link>
         {user ? (
-          <button 
-            onClick={async () => { await supabase.auth.signOut(); window.location.reload(); }}
-            className={styles.submitBtn} 
-            style={{ background: '#f3f4f6', color: '#374151', border: '1px solid #d1d5db' }}
-          >
-            Đăng xuất
-          </button>
+          <Link href="/dashboard" className={styles.submitBtn} style={{ background: '#f8f9fb', color: '#111', border: '1px solid #d1d5db' }}>Workspace</Link>
         ) : (
           <Link href="/login" className={styles.submitBtn} style={{ background: '#fff', color: '#0ea5e9', border: '1px solid #0ea5e9' }}>Đăng nhập</Link>
         )}
       </div>
 
-      <div ref={parentRef} className={styles.grid}>
-        {loading && brands.length === 0 && (
-          <div className={styles.loading}>Đang tải...</div>
-        )}
-        {!loading && brands.length === 0 && (
-          <div className={styles.empty}>Không tìm thấy thương hiệu nào</div>
-        )}
-        <div style={{ height: rowVirtualizer.getTotalSize(), position: 'relative' }}>
-          {rowVirtualizer.getVirtualItems().map(vRow => {
-            const startIdx = vRow.index * cols;
-            const rowBrands = brands.slice(startIdx, startIdx + cols);
-            return (
-              <div
-                key={vRow.index}
-                className={styles.row}
-                style={{ position: 'absolute', top: vRow.start, left: 0, right: 0 }}
-              >
-                {rowBrands.map(brand => (
-                  <div key={brand.id} style={{ flex: `0 0 calc(${100 / cols}% - ${GAP * (cols - 1) / cols}px)` }}>
-                    <LogoCard brand={brand} onClick={() => setSelected(brand)} />
-                  </div>
+      <div className={styles.mainArea}>
+        <div className={styles.gridWrapper}>
+          {!search && !initialIndustry && !initialProvince && (
+            <div className={styles.hero}>
+              <h1 className={styles.heroTitle}>Khám phá 50.000+ Thương hiệu Việt Nam</h1>
+              <p className={styles.heroSubtitle}>Nền tảng danh bạ doanh nghiệp uy tín, giúp bạn dễ dàng tìm kiếm đối tác và mở rộng tệp khách hàng tiềm năng.</p>
+              <div className={styles.categories}>
+                {['Spa', 'Nail', 'Barber', 'Hotel', 'Restaurant', 'Technology', 'Education', 'Fashion'].map(cat => (
+                  <button key={cat} className={styles.categoryTag} onClick={() => setSearch(cat)}>{cat}</button>
                 ))}
               </div>
-            );
-          })}
+            </div>
+          )}
+
+          <div ref={parentRef} className={styles.grid}>
+            {loading && brands.length === 0 && (
+              <div className={styles.loading}>Đang tải...</div>
+            )}
+            {!loading && brands.length === 0 && (
+              <div className={styles.empty}>Không tìm thấy thương hiệu nào</div>
+            )}
+            <div style={{ height: rowVirtualizer.getTotalSize(), position: 'relative' }}>
+              {rowVirtualizer.getVirtualItems().map(vRow => {
+                const startIdx = vRow.index * cols;
+                const rowBrands = brands.slice(startIdx, startIdx + cols);
+                return (
+                  <div
+                    key={vRow.index}
+                    className={styles.row}
+                    style={{ position: 'absolute', top: vRow.start, left: 0, right: 0 }}
+                  >
+                    {rowBrands.map(brand => (
+                      <div key={brand.id} style={{ flex: `0 0 calc(${100 / cols}% - ${16 * (cols - 1) / cols}px)` }}>
+                        <LogoCard brand={brand} onClick={() => setSelected(brand)} />
+                      </div>
+                    ))}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </div>
+
+        {selected && (
+          <div className={styles.sidePanel}>
+            <InfoPanel brand={selected} onClose={() => setSelected(null)} mode="desktop" />
+          </div>
+        )}
       </div>
 
-      {selected && <InfoPanel brand={selected} onClose={() => setSelected(null)} />}
+      {selected && <InfoPanel brand={selected} onClose={() => setSelected(null)} mode="mobile" />}
     </div>
   );
 }
