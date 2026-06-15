@@ -60,12 +60,12 @@ export default function InfoPanel({ brand, onClose, mode = 'mobile' }: Props) {
         </div>
 
         <div className={styles.statsRow}>
-          <div className={styles.statItem}>
+          <div className={`${styles.statItem} ${styles.view}`}>
             <div className={styles.statValue}>{clicks}</div>
             <div className={styles.statLabel}>Lượt xem</div>
           </div>
-          <div className={styles.statItem}>
-            <div className={styles.statValue} style={{ fontSize: '1rem', fontWeight: 700, color: '#f59e0b' }}>{hotness}</div>
+          <div className={`${styles.statItem} ${styles.hot}`}>
+            <div className={styles.statValue} style={{ fontSize: '1rem', color: '#d97706' }}>{hotness}</div>
             <div className={styles.statLabel}>Độ hot</div>
           </div>
         </div>
