@@ -15,6 +15,12 @@ export default function InfoPanel({ brand, onClose, mode = 'mobile' }: Props) {
   const logoUrl = latestLogo?.url_256 || latestLogo?.url_128 || latestLogo?.url_64 || '';
   const brandUrl = typeof window !== 'undefined' ? `${window.location.origin}/brand/${brand.slug}` : '';
 
+  const clicks = brand.click_count || 1;
+  let hotness = '🌱 Mới nổi';
+  if (clicks >= 500) hotness = '🚀 Siêu Hot';
+  else if (clicks >= 200) hotness = '🔥 Hot';
+  else if (clicks >= 50) hotness = '⭐ Đang lên';
+
   useEffect(() => {
     if (mode === 'mobile') {
       document.body.style.overflow = 'hidden';
@@ -55,11 +61,11 @@ export default function InfoPanel({ brand, onClose, mode = 'mobile' }: Props) {
 
         <div className={styles.statsRow}>
           <div className={styles.statItem}>
-            <div className={styles.statValue}>{brand.click_count || 1}</div>
+            <div className={styles.statValue}>{clicks}</div>
             <div className={styles.statLabel}>Lượt xem</div>
           </div>
           <div className={styles.statItem}>
-            <div className={styles.statValue}>🔥</div>
+            <div className={styles.statValue} style={{ fontSize: '1rem', fontWeight: 700, color: '#f59e0b' }}>{hotness}</div>
             <div className={styles.statLabel}>Độ hot</div>
           </div>
         </div>
