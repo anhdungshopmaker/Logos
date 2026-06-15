@@ -144,12 +144,16 @@ export default function AdminDashboard() {
                   </tr>
                 </thead>
                 <tbody>
-                  {brands.map(b => (
+                  {brands.map(b => {
+                    const uploads = b.logo_uploads || [];
+                    const latestLogo = uploads[uploads.length - 1];
+                    const logoUrl = latestLogo?.url_64 ? `${latestLogo.url_64}${latestLogo.url_64.includes('?') ? '&' : '?'}t=${Date.now()}` : '';
+                    return (
                     <tr key={b.id}>
                       <td>
-                        {b.logo_uploads?.[0]?.url_64
+                        {logoUrl
                           // eslint-disable-next-line @next/next/no-img-element
-                          ? <img src={`${b.logo_uploads[0].url_64}${b.logo_uploads[0].url_64.includes('?') ? '&' : '?'}t=${Date.now()}`} alt="" className={styles.logoThumb} />
+                          ? <img src={logoUrl} alt="" className={styles.logoThumb} />
                           : <div className={styles.logoPlaceholder}>{b.name?.charAt(0)}</div>}
                       </td>
                       <td>
@@ -167,7 +171,8 @@ export default function AdminDashboard() {
                         </div>
                       </td>
                     </tr>
-                  ))}
+                    );
+                  })}
                 </tbody>
               </table>
             }
@@ -192,12 +197,16 @@ export default function AdminDashboard() {
                   </tr>
                 </thead>
                 <tbody>
-                  {brands.map(b => (
+                  {brands.map(b => {
+                    const uploads = b.logo_uploads || [];
+                    const latestLogo = uploads[uploads.length - 1];
+                    const logoUrl = latestLogo?.url_64 ? `${latestLogo.url_64}${latestLogo.url_64.includes('?') ? '&' : '?'}t=${Date.now()}` : '';
+                    return (
                     <tr key={b.id}>
                       <td>
-                        {b.logo_uploads?.[0]?.url_64
+                        {logoUrl
                           // eslint-disable-next-line @next/next/no-img-element
-                          ? <img src={`${b.logo_uploads[0].url_64}${b.logo_uploads[0].url_64.includes('?') ? '&' : '?'}t=${Date.now()}`} alt="" className={styles.logoThumb} />
+                          ? <img src={logoUrl} alt="" className={styles.logoThumb} />
                           : <div className={styles.logoPlaceholder}>{b.name?.charAt(0)}</div>}
                       </td>
                       <td>
@@ -229,7 +238,8 @@ export default function AdminDashboard() {
                         </div>
                       </td>
                     </tr>
-                  ))}
+                    );
+                  })}
                 </tbody>
               </table>
             }

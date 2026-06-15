@@ -79,7 +79,9 @@ export default function EditBrandPage({ params }: { params: Promise<{ id: string
   if (loading) return <div style={{ padding: 40, color: '#333', background: '#f0f2f5', minHeight: '100vh' }}>Đang tải...</div>;
   if (!brand) return <div style={{ padding: 40, color: '#333' }}>Không tìm thấy thương hiệu.</div>;
 
-  const logoUrl = brand.logo_uploads?.[0]?.url_128;
+  const uploads = brand.logo_uploads || [];
+  const latestLogo = uploads[uploads.length - 1];
+  const logoUrl = latestLogo?.url_128;
 
   return (
     <div style={{ minHeight: '100vh', background: '#f0f2f5', color: '#111', padding: 32, fontFamily: 'var(--font, system-ui)' }}>

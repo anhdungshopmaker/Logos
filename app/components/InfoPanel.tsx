@@ -4,7 +4,9 @@ import Link from 'next/link';
 import styles from './InfoPanel.module.css';
 
 export default function InfoPanel({ brand, onClose }: { brand: any; onClose: () => void }) {
-  const logoUrl = brand.logo_uploads?.[0]?.url_128 || brand.logo_uploads?.[0]?.url_64 || '';
+  const uploads = brand.logo_uploads || [];
+  const latestLogo = uploads[uploads.length - 1];
+  const logoUrl = latestLogo?.url_128 || latestLogo?.url_64 || '';
   const brandUrl = typeof window !== 'undefined' ? `${window.location.origin}/brand/${brand.slug}` : '';
 
   useEffect(() => {

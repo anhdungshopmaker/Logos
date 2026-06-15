@@ -7,7 +7,9 @@ interface Props {
 }
 
 export default function LogoCard({ brand, onClick }: Props) {
-  const logoUrl = brand.logo_uploads?.[0]?.url_64 || brand.logo_uploads?.[0]?.url_128 || '';
+  const uploads = brand.logo_uploads || [];
+  const latestLogo = uploads[uploads.length - 1];
+  const logoUrl = latestLogo?.url_64 || latestLogo?.url_128 || '';
 
   return (
     <div className={styles.card} onClick={onClick} title={brand.name}>
