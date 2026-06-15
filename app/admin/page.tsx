@@ -149,11 +149,11 @@ export default function AdminDashboard() {
                       <td>
                         {b.logo_uploads?.[0]?.url_64
                           // eslint-disable-next-line @next/next/no-img-element
-                          ? <img src={b.logo_uploads[0].url_64} alt="" className={styles.logoThumb} />
+                          ? <img src={`${b.logo_uploads[0].url_64}${b.logo_uploads[0].url_64.includes('?') ? '&' : '?'}t=${Date.now()}`} alt="" className={styles.logoThumb} />
                           : <div className={styles.logoPlaceholder}>{b.name?.charAt(0)}</div>}
                       </td>
                       <td>
-                        <div style={{ fontWeight: 600, color: '#fff' }}>{b.name}</div>
+                        <div style={{ fontWeight: 600, color: '#111' }}>{b.name}</div>
                         <div style={{ fontSize: '0.8rem', color: '#666' }}>{b.slug}</div>
                       </td>
                       <td>{b.province || '—'}</td>
@@ -184,6 +184,7 @@ export default function AdminDashboard() {
                   <tr>
                     <th>Logo</th>
                     <th>Tên</th>
+                    <th>Tỉnh</th>
                     <th>Trạng thái</th>
                     <th>Gói</th>
                     <th>Clicks</th>
@@ -196,13 +197,14 @@ export default function AdminDashboard() {
                       <td>
                         {b.logo_uploads?.[0]?.url_64
                           // eslint-disable-next-line @next/next/no-img-element
-                          ? <img src={b.logo_uploads[0].url_64} alt="" className={styles.logoThumb} />
+                          ? <img src={`${b.logo_uploads[0].url_64}${b.logo_uploads[0].url_64.includes('?') ? '&' : '?'}t=${Date.now()}`} alt="" className={styles.logoThumb} />
                           : <div className={styles.logoPlaceholder}>{b.name?.charAt(0)}</div>}
                       </td>
                       <td>
-                        <div style={{ fontWeight: 600, color: '#fff' }}>{b.name}</div>
-                        <div style={{ fontSize: '0.8rem', color: '#666' }}>{b.province}</div>
+                        <div style={{ fontWeight: 600, color: '#111' }}>{b.name}</div>
+                        <div style={{ fontSize: '0.8rem', color: '#666' }}>{b.slug}</div>
                       </td>
+                      <td>{b.province || '—'}</td>
                       <td>
                         <span className={`${styles.badge} ${styles[b.status as keyof typeof styles] || ''}`}>
                           {b.status === 'approved' ? '✅ Đã duyệt' : b.status === 'pending' ? '🕐 Chờ duyệt' : '❌ Từ chối'}
