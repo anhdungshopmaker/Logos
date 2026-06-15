@@ -168,7 +168,7 @@ export default function UserEditBrandPage({ params }: { params: Promise<{ id: st
               ['website', 'Website'], ['fanpage', 'Fanpage'],
               ['google_maps_url', 'Google Maps URL']
             ].map(([field, label]) => (
-              <div key={field} style={field === 'website' || field === 'fanpage' || field === 'google_maps_url' || field === 'zalo' ? { ...fieldStyle, gridColumn: '1 / -1' } : fieldStyle}>
+              <div key={field} style={field === 'website' || field === 'fanpage' || field === 'google_maps_url' ? { ...fieldStyle, gridColumn: '1 / -1' } : fieldStyle}>
                 <label style={labelStyle}>{label}</label>
                 <input style={inputStyle} value={brand[field] || ''} onChange={e => setBrand({ ...brand, [field]: e.target.value })} required={field === 'name' || field === 'province'} />
               </div>
