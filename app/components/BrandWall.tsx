@@ -112,27 +112,33 @@ export default function BrandWall({
   return (
     <div className={styles.wrapper}>
       <div className={styles.toolbar}>
-        <span className={styles.logo}>🇻🇳 BrandWall</span>
-        <input
-          className={styles.search}
-          placeholder="🔍 Tìm kiếm doanh nghiệp..."
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-        />
+        <Link href="/" className={styles.logo} style={{ textDecoration: 'none' }}>
+          <span>🇻🇳</span> Brand Wall
+        </Link>
         <div style={{ flex: 1 }} />
+        <Link href="/submit" className={styles.submitBtn} style={{ background: '#fff', color: 'var(--primary)', border: '1px solid rgba(11, 46, 107, 0.15)' }}>+ Đăng ký</Link>
         {user ? (
           <Link href="/dashboard" className={styles.submitBtn} style={{ background: 'var(--primary)', color: '#fff' }}>Workspace</Link>
         ) : (
-          <Link href="/login" className={styles.submitBtn} style={{ background: '#fff', color: 'var(--primary)', border: '1px solid rgba(11, 46, 107, 0.1)' }}>Đăng nhập</Link>
+          <Link href="/login" className={styles.submitBtn} style={{ background: 'var(--primary)', color: '#fff' }}>Đăng nhập</Link>
         )}
       </div>
 
       <div className={styles.mainArea}>
         <div className={styles.gridWrapper}>
-          {!search && !initialIndustry && !initialProvince && (
+          {!initialIndustry && !initialProvince && (
             <div className={styles.hero}>
-              <h1 className={styles.heroTitle}>🇻🇳 Brand Wall</h1>
+              <h1 className={styles.heroTitle}><span>🇻🇳</span> Brand Wall</h1>
               <p className={styles.heroSubtitle}>Khám phá 50.000+ thương hiệu, doanh nghiệp và dịch vụ hàng đầu Việt Nam.</p>
+              
+              <div className={styles.searchWrap}>
+                <input
+                  className={styles.heroSearch}
+                  placeholder="🔍 Tìm spa, nail, khách sạn, nhà hàng..."
+                  value={search}
+                  onChange={e => setSearch(e.target.value)}
+                />
+              </div>
               <div className={styles.categories}>
                 {[
                   { id: 'Spa', label: '💅 Spa' },
