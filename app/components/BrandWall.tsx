@@ -116,7 +116,7 @@ export default function BrandWall({
           <span>🇻🇳</span> Brand Wall
         </Link>
         <div style={{ flex: 1 }} />
-        <Link href="/submit" className={styles.submitBtn} style={{ background: '#fff', color: 'var(--primary)', border: '1px solid rgba(11, 46, 107, 0.15)' }}>+ Đăng ký</Link>
+        <Link href="/submit" className={styles.submitBtn} style={{ background: '#fff', color: 'var(--primary)', border: '1px solid rgba(11, 46, 107, 0.15)' }}>+ Logo</Link>
         {user ? (
           <Link href="/dashboard" className={styles.submitBtn} style={{ background: 'var(--primary)', color: '#fff' }}>Workspace</Link>
         ) : (
