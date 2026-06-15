@@ -25,6 +25,8 @@ export async function POST(req: NextRequest) {
       urls[`url_${size}`] = data.publicUrl;
     }));
 
+    await supabase.from('logo_uploads').delete().eq('brand_id', brandId);
+    
     await supabase.from('logo_uploads').insert({
       brand_id: brandId,
       url_64: urls['url_64'],
