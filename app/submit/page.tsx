@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
+import Script from 'next/script';
 import styles from './page.module.css';
 import { resizeImage } from '@/utils/image';
 
@@ -32,6 +33,7 @@ export default function SubmitPage() {
           name: fd.get('name'), province: fd.get('province'), industry: fd.get('industry'),
           description: fd.get('description'), website: fd.get('website'),
           fanpage: fd.get('fanpage'), phone: fd.get('phone'), google_maps_url: fd.get('google_maps_url'),
+          turnstileToken: fd.get('cf-turnstile-response')
         }),
       });
       
@@ -97,6 +99,11 @@ export default function SubmitPage() {
           <input name="phone" type="tel" className={styles.input} placeholder="090..." /></div>
         <div className={styles.field}><label className={styles.label}>Google Maps URL</label>
           <input name="google_maps_url" type="url" className={styles.input} placeholder="https://maps.app.goo.gl/..." /></div>
+        
+        <div style={{ margin: '15px 0' }}>
+          <div className="cf-turnstile" data-sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || '1x00000000000000000000AA'} />
+        </div>
+
         <button type="submit" disabled={loading} className={styles.button}>
           {loading ? 'Đang xử lý...' : 'Gửi Yêu Cầu'}
         </button>
@@ -104,6 +111,7 @@ export default function SubmitPage() {
           <Link href="/" style={{ color: '#666' }}>← Quay lại trang chủ</Link>
         </div>
       </form>
+      <Script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer />
     </div>
   );
 }

@@ -38,9 +38,18 @@ export default function BrandWall({
   const [page, setPage] = useState(0);
   const [search, setSearch] = useState('');
   const [selected, setSelected] = useState<any>(null);
+  const [user, setUser] = useState<any>(null);
   const supabase = createClient();
   const parentRef = useRef<HTMLDivElement>(null);
   const cols = useCols();
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => setUser(data.user));
+    const { data: authListener } = supabase.auth.onAuthStateChange((_, session) => {
+      setUser(session?.user || null);
+    });
+    return () => authListener.subscription.unsubscribe();
+  }, [supabase]);
 
   const fetchBrands = useCallback(async (p: number, q: string) => {
     let query = supabase
@@ -106,6 +115,17 @@ export default function BrandWall({
           onChange={e => setSearch(e.target.value)}
         />
         <Link href="/submit" className={styles.submitBtn}>+ Đăng ký</Link>
+        {user ? (
+          <button 
+            onClick={async () => { await supabase.auth.signOut(); window.location.reload(); }}
+            className={styles.submitBtn} 
+            style={{ background: '#f3f4f6', color: '#374151', border: '1px solid #d1d5db' }}
+          >
+            Đăng xuất
+          </button>
+        ) : (
+          <Link href="/login" className={styles.submitBtn} style={{ background: '#fff', color: '#0ea5e9', border: '1px solid #0ea5e9' }}>Đăng nhập</Link>
+        )}
       </div>
 
       <div ref={parentRef} className={styles.grid}>

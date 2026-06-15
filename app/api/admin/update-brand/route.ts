@@ -4,26 +4,28 @@ import { adminAuthClient } from '@/utils/supabase/admin';
 
 export async function POST(req: NextRequest) {
   try {
-    const { brandId, package_type, priority, expires_at } = await req.json();
-    const supabase = await createClient();
+    const data = await req.json();
+    const { brandId, ...updates } = data;
+    
+    if (!brandId) return NextResponse.json({ error: 'Missing brandId' }, { status: 400 });
 
+    const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single();
     if (profile?.role !== 'admin') return NextResponse.json({ error: 'Forbidden: Admin only' }, { status: 403 });
 
-    const updates: any = {};
-    if (package_type !== undefined) updates.package_type = package_type;
-    if (priority !== undefined) updates.priority = priority;
-    if (expires_at !== undefined) updates.expires_at = expires_at;
+    const { error } = await adminAuthClient
+      .from('brands')
+      .update(updates)
+      .eq('id', brandId);
 
-    const { error } = await adminAuthClient.from('brands').update(updates).eq('id', brandId);
     if (error) throw error;
     
     await adminAuthClient.from('admin_logs').insert({
       admin_id: user.id,
-      action: `update_brand_package`,
+      action: 'admin_edit_brand',
       target_id: brandId,
       details: updates
     });

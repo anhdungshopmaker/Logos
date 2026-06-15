@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/utils/supabase/server';
+import { adminAuthClient } from '@/utils/supabase/admin';
 
 export async function POST(req: NextRequest) {
   try {
@@ -8,9 +8,11 @@ export async function POST(req: NextRequest) {
 
     if (!brandId) return NextResponse.json({ error: 'Thiếu brandId' }, { status: 400 });
 
-    const supabase = await createClient();
+    const { data: brand } = await adminAuthClient.from('brands').select('owner_id').eq('id', brandId).single();
+    if (!brand) return NextResponse.json({ error: 'Thương hiệu không tồn tại' }, { status: 404 });
+    
+    const ownerFolder = brand.owner_id || 'anonymous';
     const urls: Record<string, string> = {};
-
     const v = Date.now();
 
     await Promise.all([64, 128, 256].map(async (size) => {
@@ -18,18 +20,18 @@ export async function POST(req: NextRequest) {
       if (!file) throw new Error(`Thiếu file kích thước ${size}`);
 
       const buffer = Buffer.from(await file.arrayBuffer());
-      const fileName = `${brandId}/${size}.webp`;
+      const fileName = `${ownerFolder}/${brandId}/${size}.webp`;
       
-      const { error: uploadError } = await supabase.storage.from('logos').upload(fileName, buffer, { contentType: 'image/webp', upsert: true });
+      const { error: uploadError } = await adminAuthClient.storage.from('logos').upload(fileName, buffer, { contentType: 'image/webp', upsert: true });
       if (uploadError) throw new Error(`Lỗi tải ảnh ${size}: ${uploadError.message}`);
       
-      const { data } = supabase.storage.from('logos').getPublicUrl(fileName);
+      const { data } = adminAuthClient.storage.from('logos').getPublicUrl(fileName);
       urls[`url_${size}`] = `${data.publicUrl}?v=${v}`;
     }));
 
-    await supabase.from('logo_uploads').delete().eq('brand_id', brandId);
+    await adminAuthClient.from('logo_uploads').delete().eq('brand_id', brandId);
     
-    await supabase.from('logo_uploads').insert({
+    await adminAuthClient.from('logo_uploads').insert({
       brand_id: brandId,
       url_64: urls['url_64'],
       url_128: urls['url_128'],

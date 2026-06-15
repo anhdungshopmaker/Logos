@@ -50,15 +50,28 @@ export default function EditBrandPage({ params }: { params: Promise<{ id: string
         }
       }
 
-      const { error } = await supabase.from('brands').update({
+      const updatePayload = {
+        brandId: brand.id,
         name: brand.name, province: brand.province, industry: brand.industry,
         description: brand.description, website: brand.website, fanpage: brand.fanpage,
         phone: brand.phone, google_maps_url: brand.google_maps_url,
         status: brand.status, package_type: brand.package_type,
         priority: brand.priority, expires_at: brand.expires_at || null,
-      }).eq('id', brand.id);
+      };
+
+      const updateRes = await fetch('/api/admin/update-brand', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatePayload),
+      });
+
+      if (!updateRes.ok) {
+        const text = await updateRes.text();
+        let errData;
+        try { errData = JSON.parse(text); } catch { throw new Error('Lỗi server khi lưu thông tin'); }
+        throw new Error(errData.error || 'Lỗi lưu thông tin');
+      }
       
-      if (error) throw error;
       setMsg('✅ Lưu thành công!');
     } catch (error: any) {
       setMsg('❌ ' + error.message);
