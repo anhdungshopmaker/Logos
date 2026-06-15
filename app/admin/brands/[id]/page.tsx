@@ -54,9 +54,9 @@ export default function EditBrandPage({ params }: { params: Promise<{ id: string
         brandId: brand.id,
         name: brand.name, province: brand.province, industry: brand.industry,
         description: brand.description, website: brand.website, fanpage: brand.fanpage,
-        phone: brand.phone, google_maps_url: brand.google_maps_url,
-        status: brand.status, package_type: brand.package_type,
-        priority: brand.priority, expires_at: brand.expires_at || null,
+        phone: brand.phone, zalo: brand.zalo, google_maps_url: brand.google_maps_url,
+        priority: brand.priority, package_type: brand.package_type,
+        status: brand.status, expires_at: brand.expires_at || null,
       };
 
       const updateRes = await fetch('/api/admin/update-brand', {
@@ -128,12 +128,11 @@ export default function EditBrandPage({ params }: { params: Promise<{ id: string
           </div>
 
           {[
-            ['name', 'Tên thương hiệu'], ['province', 'Tỉnh/Thành phố'],
-            ['industry', 'Ngành nghề'], ['phone', 'Số điện thoại'],
-            ['website', 'Website'], ['fanpage', 'Fanpage'],
-            ['google_maps_url', 'Google Maps URL'],
+            ['name', 'Tên thương hiệu'], ['province', 'Tỉnh/Thành'], ['industry', 'Ngành nghề'],
+            ['phone', 'Số điện thoại'], ['zalo', 'Zalo (Chat)'], ['website', 'Website'], ['fanpage', 'Fanpage'],
+            ['google_maps_url', 'Google Maps URL']
           ].map(([field, label]) => (
-            <div key={field} style={field === 'website' || field === 'fanpage' || field === 'google_maps_url' ? { ...fieldStyle, gridColumn: '1 / -1' } : fieldStyle}>
+            <div key={field} style={field === 'website' || field === 'fanpage' || field === 'google_maps_url' || field === 'zalo' ? { ...fieldStyle, gridColumn: '1 / -1' } : fieldStyle}>
               <label style={labelStyle}>{label}</label>
               <input style={inputStyle} value={brand[field] || ''} onChange={e => setBrand({ ...brand, [field]: e.target.value })} />
             </div>
