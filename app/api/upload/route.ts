@@ -11,6 +11,8 @@ export async function POST(req: NextRequest) {
     const supabase = await createClient();
     const urls: Record<string, string> = {};
 
+    const v = Date.now();
+
     await Promise.all([64, 128, 256].map(async (size) => {
       const file = formData.get(`file_${size}`) as File | null;
       if (!file) throw new Error(`Thiếu file kích thước ${size}`);
@@ -22,7 +24,7 @@ export async function POST(req: NextRequest) {
       if (uploadError) throw new Error(`Lỗi tải ảnh ${size}: ${uploadError.message}`);
       
       const { data } = supabase.storage.from('logos').getPublicUrl(fileName);
-      urls[`url_${size}`] = data.publicUrl;
+      urls[`url_${size}`] = `${data.publicUrl}?v=${v}`;
     }));
 
     await supabase.from('logo_uploads').delete().eq('brand_id', brandId);
