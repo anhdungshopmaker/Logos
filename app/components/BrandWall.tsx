@@ -63,6 +63,7 @@ export default function BrandWall({
       .eq('status', 'approved')
       .order('priority', { ascending: false })
       .order('click_count', { ascending: false })
+      .order('created_at', { ascending: false })
       .range(p * PAGE_SIZE, (p + 1) * PAGE_SIZE - 1);
 
     if (initialProvince) query = query.ilike('province', `%${initialProvince}%`);
