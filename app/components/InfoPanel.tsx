@@ -35,6 +35,7 @@ export default function InfoPanel({ brand, onClose, mode = 'mobile' }: Props) {
     <>
       <div className={styles.cover}>
         {brand.cover_url && <img src={brand.cover_url} alt="Cover" />}
+        <button onClick={onClose} className={styles.closeBtn}>✕</button>
       </div>
       
       <div className={styles.logoWrap}>

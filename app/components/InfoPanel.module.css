@@ -28,10 +28,32 @@
 }
 
 .cover {
-  width: 100%; height: 140px; background: linear-gradient(135deg, #e0e7ff 0%, #f3e8ff 100%);
-  position: relative; overflow: hidden;
+  height: 120px; background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
+  position: relative;
 }
-.cover img { width: 100%; height: 100%; object-fit: cover; }
+.cover img {
+  width: 100%; height: 100%; object-fit: cover;
+}
+.closeBtn {
+  position: absolute;
+  top: 12px; right: 12px;
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.4);
+  color: #fff;
+  border: none;
+  font-size: 1rem;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  transition: all 0.2s;
+  z-index: 10;
+}
+.closeBtn:hover {
+  background: rgba(0, 0, 0, 0.7);
+  transform: scale(1.05);
+}
 
 .logoWrap {
   width: 90px; height: 90px; border-radius: 20px;
@@ -68,6 +90,9 @@
 .desc { color: #374151; line-height: 1.6; margin-bottom: 24px; font-size: 0.95rem; text-align: center; }
 
 .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+.grid2 > *:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+}
 
 .btn {
   display: flex; align-items: center; justify-content: center; gap: 6px;
