@@ -69,10 +69,11 @@ export default async function BrandPage({ params }: Props) {
         </div>
         {brand.description && <p className={styles.desc}>{brand.description}</p>}
         <div className={styles.grid}>
-          {brand.website && <a href={brand.website} target="_blank" rel="noopener noreferrer" className={styles.item}><span>🌐</span><span>{brand.website.replace(/^https?:\/\//, '')}</span></a>}
-          {brand.fanpage && <a href={brand.fanpage} target="_blank" rel="noopener noreferrer" className={styles.item}><span>👍</span><span>Fanpage</span></a>}
-          {brand.phone && <a href={`tel:${brand.phone}`} className={styles.item}><span>📞</span><span>{brand.phone}</span></a>}
-          {brand.google_maps_url && <a href={brand.google_maps_url} target="_blank" rel="noopener noreferrer" className={styles.item}><span>🗺️</span><span>Xem bản đồ</span></a>}
+          {brand.website && <a href={brand.website} target="_blank" rel="noopener noreferrer" className={styles.item}><span>🌐</span><span className={styles.itemText}>{brand.website.replace(/^https?:\/\//, '')}</span></a>}
+          {brand.phone && <a href={`tel:${brand.phone}`} className={styles.item}><span>📞</span><span className={styles.itemText}>{brand.phone}</span></a>}
+          {brand.zalo && <a href={`https://zalo.me/${brand.zalo.replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer" className={styles.item} style={{ borderColor: '#e0f2fe', background: '#f0f9ff', color: '#0ea5e9' }}><span>💬</span><span className={styles.itemText}>Chat Zalo</span></a>}
+          {brand.fanpage && <a href={brand.fanpage} target="_blank" rel="noopener noreferrer" className={styles.item} style={{ borderColor: '#eef2ff', background: '#f5f7ff', color: '#4f46e5' }}><span>👍</span><span className={styles.itemText}>Fanpage</span></a>}
+          {brand.google_maps_url && <a href={brand.google_maps_url} target="_blank" rel="noopener noreferrer" className={styles.item}><span>🗺️</span><span className={styles.itemText}>Xem bản đồ</span></a>}
         </div>
         <div style={{ marginTop: 32 }}>
           <Link href={`/claim?id=${brand.id}`} className={styles.claimBtn}>Tôi là chủ thương hiệu này</Link>
