@@ -47,7 +47,12 @@ export default function SignupPage() {
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f8f9fb', fontFamily: 'var(--font, system-ui)' }}>
-      <div style={{ background: '#fff', padding: 40, borderRadius: 16, width: '100%', maxWidth: 400, boxShadow: '0 4px 24px rgba(0,0,0,0.06)' }}>
+      <div style={{ background: '#fff', padding: 40, borderRadius: 16, width: '100%', maxWidth: 400, boxShadow: '0 4px 24px rgba(0,0,0,0.06)', position: 'relative' }}>
+        
+        <Link href="/" style={{ display: 'inline-block', marginBottom: 20, color: '#6b7280', textDecoration: 'none', fontSize: '0.9rem', fontWeight: 500 }}>
+          ← Quay lại trang chủ
+        </Link>
+
         <h1 style={{ fontSize: '1.8rem', fontWeight: 800, textAlign: 'center', marginBottom: 24, color: '#111' }}>Tạo tài khoản</h1>
         
         {error && <div style={{ padding: 12, background: '#fee2e2', color: '#dc2626', borderRadius: 8, marginBottom: 16, fontSize: '0.9rem' }}>{error}</div>}
