@@ -72,20 +72,30 @@ export default function AdminDashboard() {
 
   const handleClaimAction = async (claimId: string, action: 'approve' | 'reject', brandId: string, userId: string) => {
     if (action === 'approve' && !window.confirm('Duyệt yêu cầu này? Thương hiệu sẽ được chuyển sang quyền sở hữu của user này.')) return;
-    await fetch('/api/admin/claims', {
+    const res = await fetch('/api/admin/claims', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ claimId, brandId, userId, action }),
     });
+    const data = await res.json();
+    if (!res.ok) {
+      alert('Lỗi: ' + (data.error || 'Không thể xử lý'));
+      return;
+    }
     setClaims(prev => prev.map(c => c.id === claimId ? { ...c, status: action === 'approve' ? 'approved' : 'rejected' } : c));
   };
 
   const handleStatus = async (brandId: string, status: 'approved' | 'rejected') => {
-    await fetch('/api/admin/approve', {
+    const res = await fetch('/api/admin/approve', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ brandId, status }),
     });
+    const data = await res.json();
+    if (!res.ok) {
+      alert('Lỗi: ' + (data.error || 'Không thể cập nhật trạng thái'));
+      return;
+    }
     setBrands(prev => prev.filter(b => tab === 'pending' ? b.id !== brandId : true).map(b => b.id === brandId ? { ...b, status } : b));
   };
 
