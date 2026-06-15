@@ -54,7 +54,7 @@ export default function BrandWall({
   const fetchBrands = useCallback(async (p: number, q: string) => {
     let query = supabase
       .from('brands')
-      .select('*, logo_uploads(url_64, url_128)')
+      .select('*, logo_uploads(url_128, url_256)')
       .eq('status', 'approved')
       .order('priority', { ascending: false })
       .order('click_count', { ascending: false })

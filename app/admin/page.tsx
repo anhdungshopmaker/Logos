@@ -13,8 +13,9 @@ const PACKAGE_OPTIONS = [
 ];
 
 export default function AdminDashboard() {
-  const [tab, setTab] = useState<'pending' | 'all' | 'rejected' | 'stats'>('pending');
+  const [tab, setTab] = useState<'pending' | 'all' | 'rejected' | 'stats' | 'claims'>('pending');
   const [brands, setBrands] = useState<any[]>([]);
+  const [claims, setClaims] = useState<any[]>([]);
   const [stats, setStats] = useState({ total: 0, pending: 0, approved: 0, topClicked: [] as any[] });
   const [loading, setLoading] = useState(true);
   const [userEmail, setUserEmail] = useState('');
@@ -59,10 +60,25 @@ export default function AdminDashboard() {
         });
         setLoading(false);
       });
+    } else if (tab === 'claims') {
+      fetch('/api/admin/claims').then(res => res.json()).then(res => {
+        setClaims(res.data || []);
+        setLoading(false);
+      });
     } else {
       loadData();
     }
   }, [tab, loadData, supabase]);
+
+  const handleClaimAction = async (claimId: string, action: 'approve' | 'reject', brandId: string, userId: string) => {
+    if (action === 'approve' && !window.confirm('Duyệt yêu cầu này? Thương hiệu sẽ được chuyển sang quyền sở hữu của user này.')) return;
+    await fetch('/api/admin/claims', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ claimId, brandId, userId, action }),
+    });
+    setClaims(prev => prev.map(c => c.id === claimId ? { ...c, status: action === 'approve' ? 'approved' : 'rejected' } : c));
+  };
 
   const handleStatus = async (brandId: string, status: 'approved' | 'rejected') => {
     await fetch('/api/admin/approve', {
@@ -111,6 +127,9 @@ export default function AdminDashboard() {
         </button>
         <button className={`${styles.navItem} ${tab === 'rejected' ? styles.active : ''}`} onClick={() => setTab('rejected')}>
           🗑️ Đã từ chối
+        </button>
+        <button className={`${styles.navItem} ${tab === 'claims' ? styles.active : ''}`} onClick={() => setTab('claims')}>
+          🔑 Yêu cầu Claim
         </button>
         <button className={`${styles.navItem} ${tab === 'stats' ? styles.active : ''}`} onClick={() => setTab('stats')}>
           📊 Thống kê
@@ -275,6 +294,57 @@ export default function AdminDashboard() {
               ))}
               {stats.topClicked.length === 0 && <div className={styles.empty} style={{ color: '#0ea5e9' }}>Chưa có dữ liệu</div>}
             </div>
+          </>
+        )}
+
+        {tab === 'claims' && (
+          <>
+            <h1 className={styles.pageTitle}>Yêu cầu Claim Thương Hiệu</h1>
+            {loading ? <div className={styles.empty}>Đang tải...</div> :
+              claims.length === 0 ? <div className={styles.empty}>Không có yêu cầu nào</div> :
+              <table className={styles.table}>
+                <thead>
+                  <tr>
+                    <th>Thương hiệu</th>
+                    <th>User ID</th>
+                    <th>Minh chứng</th>
+                    <th>Ngày gửi</th>
+                    <th>Trạng thái</th>
+                    <th>Hành động</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {claims.map(c => (
+                    <tr key={c.id}>
+                      <td>
+                        <div style={{ fontWeight: 600 }}>{c.brand?.name}</div>
+                        <div style={{ fontSize: '0.8rem', color: '#666' }}>{c.brand?.slug}</div>
+                      </td>
+                      <td style={{ fontSize: '0.85rem' }}>{c.user_id}</td>
+                      <td>
+                        <a href={c.proof_url} target="_blank" rel="noopener noreferrer" style={{ color: '#0ea5e9', textDecoration: 'underline' }}>Xem link</a>
+                      </td>
+                      <td style={{ color: '#666', fontSize: '0.82rem' }}>{new Date(c.created_at).toLocaleDateString('vi-VN')}</td>
+                      <td>
+                        <span className={`${styles.badge} ${styles[c.status as keyof typeof styles] || ''}`}>
+                          {c.status === 'approved' ? '✅ Đã duyệt' : c.status === 'pending' ? '🕐 Chờ duyệt' : '❌ Từ chối'}
+                        </span>
+                      </td>
+                      <td>
+                        <div className={styles.actions}>
+                          {c.status === 'pending' && (
+                            <>
+                              <button className={styles.approveBtn} onClick={() => handleClaimAction(c.id, 'approve', c.brand_id, c.user_id)}>✅ Duyệt (Giao quyền)</button>
+                              <button className={styles.rejectBtn} onClick={() => handleClaimAction(c.id, 'reject', c.brand_id, c.user_id)}>❌ Từ chối</button>
+                            </>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            }
           </>
         )}
       </div>
