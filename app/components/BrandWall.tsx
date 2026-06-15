@@ -112,19 +112,18 @@ export default function BrandWall({
   return (
     <div className={styles.wrapper}>
       <div className={styles.toolbar}>
-        <span className={styles.logo}>🇻🇳 Brand Wall</span>
+        <span className={styles.logo}>🇻🇳 BrandWall</span>
         <input
           className={styles.search}
-          placeholder="🔍 Tìm spa, nail, khách sạn, nhà hàng..."
+          placeholder="🔍 Tìm kiếm doanh nghiệp..."
           value={search}
           onChange={e => setSearch(e.target.value)}
         />
         <div style={{ flex: 1 }} />
-        <Link href="/submit" className={styles.submitBtn}>+ Đăng ký</Link>
         {user ? (
-          <Link href="/dashboard" className={styles.submitBtn} style={{ background: '#f8f9fb', color: '#111', border: '1px solid #d1d5db' }}>Workspace</Link>
+          <Link href="/dashboard" className={styles.submitBtn} style={{ background: 'var(--primary)', color: '#fff' }}>Workspace</Link>
         ) : (
-          <Link href="/login" className={styles.submitBtn} style={{ background: '#fff', color: '#0ea5e9', border: '1px solid #0ea5e9' }}>Đăng nhập</Link>
+          <Link href="/login" className={styles.submitBtn} style={{ background: '#fff', color: 'var(--primary)', border: '1px solid rgba(11, 46, 107, 0.1)' }}>Đăng nhập</Link>
         )}
       </div>
 
@@ -132,11 +131,26 @@ export default function BrandWall({
         <div className={styles.gridWrapper}>
           {!search && !initialIndustry && !initialProvince && (
             <div className={styles.hero}>
-              <h1 className={styles.heroTitle}>Khám phá thương hiệu Việt Nam</h1>
-              <p className={styles.heroSubtitle}>Tìm kiếm Spa, Nail, Barber, Khách sạn, Nhà hàng và Doanh nghiệp địa phương.</p>
+              <h1 className={styles.heroTitle}>🇻🇳 Brand Wall</h1>
+              <p className={styles.heroSubtitle}>Khám phá 50.000+ thương hiệu, doanh nghiệp và dịch vụ hàng đầu Việt Nam.</p>
               <div className={styles.categories}>
-                {['Spa', 'Nail', 'Barber', 'Khách sạn', 'Nhà hàng', 'Công nghệ', 'Giáo dục', 'Thời trang'].map(cat => (
-                  <button key={cat} className={styles.categoryTag} onClick={() => setSearch(cat)}>{cat}</button>
+                {[
+                  { id: 'Spa', label: '💅 Spa' },
+                  { id: 'Nail', label: '💅 Nail' },
+                  { id: 'Barber', label: '✂️ Barber' },
+                  { id: 'Khách sạn', label: '🏨 Khách sạn' },
+                  { id: 'Nhà hàng', label: '🍽️ Nhà hàng' },
+                  { id: 'Công nghệ', label: '💻 Công nghệ' },
+                  { id: 'Giáo dục', label: '📚 Giáo dục' },
+                  { id: 'Thời trang', label: '👗 Thời trang' },
+                ].map(cat => (
+                  <button 
+                    key={cat.id} 
+                    className={`${styles.categoryTag} ${search === cat.id ? styles.active : ''}`} 
+                    onClick={() => setSearch(cat.id)}
+                  >
+                    {cat.label}
+                  </button>
                 ))}
               </div>
             </div>
