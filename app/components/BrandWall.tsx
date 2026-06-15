@@ -20,12 +20,11 @@ function useCols(hasSidePanel: boolean) {
       const isDesktop = w >= 1025;
       const effectiveW = (isDesktop && hasSidePanel) ? w - 380 : w;
       
-      if (effectiveW >= 1200) setCols(8);
-      else if (effectiveW >= 1000) setCols(7);
-      else if (effectiveW >= 800) setCols(6);
-      else if (effectiveW >= 600) setCols(5);
-      else if (effectiveW >= 400) setCols(4);
-      else setCols(3);
+      if (effectiveW >= 1200) setCols(10);
+      else if (effectiveW >= 1024) setCols(8);
+      else if (effectiveW >= 768) setCols(6);
+      else if (effectiveW >= 480) setCols(5);
+      else setCols(4);
     };
     update();
     window.addEventListener('resize', update);
@@ -133,10 +132,10 @@ export default function BrandWall({
         <div className={styles.gridWrapper}>
           {!search && !initialIndustry && !initialProvince && (
             <div className={styles.hero}>
-              <h1 className={styles.heroTitle}>Khám phá 50.000+ Thương hiệu Việt Nam</h1>
-              <p className={styles.heroSubtitle}>Nền tảng danh bạ doanh nghiệp uy tín, giúp bạn dễ dàng tìm kiếm đối tác và mở rộng tệp khách hàng tiềm năng.</p>
+              <h1 className={styles.heroTitle}>Khám phá thương hiệu Việt Nam</h1>
+              <p className={styles.heroSubtitle}>Tìm kiếm Spa, Nail, Barber, Khách sạn, Nhà hàng và Doanh nghiệp địa phương.</p>
               <div className={styles.categories}>
-                {['Spa', 'Nail', 'Barber', 'Hotel', 'Restaurant', 'Technology', 'Education', 'Fashion'].map(cat => (
+                {['Spa', 'Nail', 'Barber', 'Khách sạn', 'Nhà hàng', 'Công nghệ', 'Giáo dục', 'Thời trang'].map(cat => (
                   <button key={cat} className={styles.categoryTag} onClick={() => setSearch(cat)}>{cat}</button>
                 ))}
               </div>
