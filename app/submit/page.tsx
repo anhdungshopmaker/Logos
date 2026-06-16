@@ -81,13 +81,13 @@ export default function SubmitPage() {
       <form className={styles.form} onSubmit={handleSubmit}>
         {msg && <div className={`${styles.message} ${styles[msg.type]}`}>{msg.text}</div>}
         <div className={styles.field}><label className={styles.label}>Tên thương hiệu *</label>
-          <input name="name" required className={styles.input} placeholder="VD: QLady Spa" /></div>
+          <input name="name" required className={styles.input} placeholder="VD: Nhà hàng Đại Dương" /></div>
         <div className={styles.field}><label className={styles.label}>Logo (PNG/JPG/WEBP, tỷ lệ vuông, max 2MB) *</label>
           <input name="file" type="file" accept="image/*" required className={styles.fileInput} /></div>
         <div className={styles.field}><label className={styles.label}>Tỉnh / Thành phố *</label>
           <input name="province" required className={styles.input} placeholder="VD: Nha Trang" /></div>
         <div className={styles.field}><label className={styles.label}>Ngành nghề</label>
-          <input name="industry" className={styles.input} placeholder="VD: Spa, Nail, Nhà hàng..." /></div>
+          <input name="industry" className={styles.input} placeholder="VD: Nhà hàng, Thực phẩm, Công nghệ, Tài chính..." /></div>
         <div className={styles.field}><label className={styles.label}>Mô tả ngắn</label>
           <textarea name="description" className={styles.textarea} placeholder="Giới thiệu về thương hiệu..." /></div>
         <div className={styles.field}><label className={styles.label}>Website</label>
