@@ -129,14 +129,14 @@
 .diamond .borderFlow {
   background: conic-gradient(
     transparent 0%,
-    transparent 45%,
-    rgba(125, 211, 252, 0.4) 49%,
+    transparent 20%,
+    rgba(125, 211, 252, 0.8) 45%,
     #ffffff 50%,
-    rgba(125, 211, 252, 0.4) 51%,
-    transparent 55%,
+    rgba(125, 211, 252, 0.8) 55%,
+    transparent 80%,
     transparent 100%
   );
-  animation-duration: 14s;
+  animation-duration: 12s;
 }
 
 /* SHINE EFFECTS */
@@ -168,10 +168,10 @@
   inset: 0;
   background: radial-gradient(
     circle at 50% 0%, 
-    #ffffff 0%, 
+    #7DD3FC 0%, 
     transparent 70%
   );
-  opacity: 0.04;
+  opacity: 0.15;
   pointer-events: none;
   z-index: 3;
 }
