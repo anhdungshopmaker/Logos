@@ -39,12 +39,14 @@ function AnimatedCounter({ end, duration = 1500 }: { end: number, duration?: num
   return <>{count}</>;
 }
 
-const FloatingOrbs = () => (
-  <div className={styles.orbsContainer}>
-    <div className={styles.orb1}></div>
-    <div className={styles.orb2}></div>
-    <div className={styles.orb3}></div>
-    <div className={styles.orb4}></div>
+const TwinklingStars = () => (
+  <div className={styles.starsContainer}>
+    <div className={`${styles.star} ${styles.star1}`}>✦</div>
+    <div className={`${styles.star} ${styles.star2}`}>✦</div>
+    <div className={`${styles.star} ${styles.star3}`}>✦</div>
+    <div className={`${styles.star} ${styles.star4}`}>✦</div>
+    <div className={`${styles.star} ${styles.star5}`}>✦</div>
+    <div className={`${styles.star} ${styles.star6}`}>✦</div>
   </div>
 );
 
@@ -84,7 +86,7 @@ export default function InfoPanel({ brand, onClose, mode = 'mobile' }: Props) {
         {tier === 'diamond' && (
           <>
             <div className={styles.diamondSpotlight}></div>
-            <FloatingOrbs />
+            <TwinklingStars />
           </>
         )}
         {brand.cover_url ? (

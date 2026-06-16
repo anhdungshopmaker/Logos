@@ -192,23 +192,28 @@
   pointer-events: none;
   z-index: 1;
 }
-.orbsContainer {
+.starsContainer {
   position: absolute; inset: 0; overflow: hidden; z-index: 1; pointer-events: none;
 }
-.orb1, .orb2, .orb3, .orb4 {
-  position: absolute; border-radius: 50%;
-  background: radial-gradient(circle at center, rgba(34,197,94,0.6) 0%, transparent 70%);
-  filter: blur(4px);
-  animation: float 6s ease-in-out infinite alternate;
+.star {
+  position: absolute;
+  color: #4ade80;
+  font-size: 14px;
+  filter: drop-shadow(0 0 6px rgba(34, 197, 94, 0.8));
+  animation: twinkle 3s ease-in-out infinite alternate;
+  opacity: 0;
 }
-.orb1 { width: 40px; height: 40px; left: 10%; top: 20%; animation-delay: 0s; }
-.orb2 { width: 60px; height: 60px; right: 20%; top: 10%; animation-delay: -2s; background: radial-gradient(circle at center, rgba(125,211,252,0.6) 0%, transparent 70%); }
-.orb3 { width: 30px; height: 30px; left: 40%; bottom: 20%; animation-delay: -4s; }
-.orb4 { width: 50px; height: 50px; right: 10%; bottom: 10%; animation-delay: -1s; }
+.star1 { left: 15%; top: 20%; animation-delay: 0s; font-size: 10px; }
+.star2 { right: 25%; top: 15%; animation-delay: 1.5s; font-size: 16px; }
+.star3 { left: 40%; bottom: 25%; animation-delay: 0.7s; font-size: 12px; }
+.star4 { right: 10%; bottom: 10%; animation-delay: 2.2s; font-size: 14px; }
+.star5 { left: 10%; bottom: 10%; animation-delay: 3s; font-size: 8px; }
+.star6 { right: 40%; top: 30%; animation-delay: 1s; font-size: 18px; }
 
-@keyframes float {
-  0% { transform: translateY(0) scale(1); opacity: 0.5; }
-  100% { transform: translateY(-20px) scale(1.2); opacity: 1; }
+@keyframes twinkle {
+  0% { transform: scale(0.5) rotate(0deg); opacity: 0; }
+  50% { opacity: 1; }
+  100% { transform: scale(1.2) rotate(45deg); opacity: 0; }
 }
 
 /* Badges */
