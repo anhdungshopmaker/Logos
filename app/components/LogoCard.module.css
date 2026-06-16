@@ -116,24 +116,24 @@
 /* TIER: DIAMOND */
 .diamond {
   --base-scale: 1.10;
-  box-shadow: 0 0 16px rgba(125, 211, 252, 0.25);
+  box-shadow: 0 0 16px rgba(34, 197, 94, 0.25);
   z-index: 10;
 }
 .diamond:hover {
-  box-shadow: 0 0 32px rgba(125, 211, 252, 0.45);
+  box-shadow: 0 0 32px rgba(34, 197, 94, 0.45);
 }
 .diamond .borderWrapper {
-  background: rgba(125, 211, 252, 0.2);
-  padding: 2px;
+  background: rgba(34, 197, 94, 0.15);
+  padding: 2.5px;
 }
 .diamond .borderFlow {
   background: conic-gradient(
     transparent 0%,
-    transparent 20%,
-    rgba(125, 211, 252, 0.8) 45%,
-    #ffffff 50%,
-    rgba(125, 211, 252, 0.8) 55%,
-    transparent 80%,
+    transparent 35%,
+    rgba(34, 197, 94, 0.8) 48%,
+    #22c55e 50%,
+    rgba(34, 197, 94, 0.8) 52%,
+    transparent 65%,
     transparent 100%
   );
   animation-duration: 12s;
@@ -168,7 +168,7 @@
   inset: 0;
   background: radial-gradient(
     circle at 50% 0%, 
-    #7DD3FC 0%, 
+    #22c55e 0%, 
     transparent 70%
   );
   opacity: 0.15;
