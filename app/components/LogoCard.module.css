@@ -1,68 +1,200 @@
 .card {
   width: 100%;
   aspect-ratio: 1;
-  background: var(--card-bg);
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8px;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  overflow: hidden;
+  border-radius: 12px;
   position: relative;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.02);
-}
-
-.infoIcon {
-  position: absolute;
-  bottom: 8px;
-  right: 8px;
-  width: 20px;
-  height: 20px;
-  background: rgba(0, 0, 0, 0.04);
-  color: var(--muted);
-  border-radius: 50%;
-  font-family: serif;
-  font-style: italic;
-  font-size: 11px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0.6;
-  transition: opacity 0.2s, background 0.2s, color 0.2s;
-  pointer-events: none;
-}
-
-.card:hover .infoIcon {
-  opacity: 1;
-  background: var(--primary);
-  color: #fff;
-  transform: scale(1.1);
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  user-select: none;
+  background: transparent;
 }
 
 .card:hover {
-  box-shadow: 0 12px 32px rgba(11, 46, 107, 0.12);
-  transform: translateY(-4px) scale(1.02);
-  border-color: rgba(11, 46, 107, 0.1);
+  transform: translateY(-3px);
 }
-
 .card:active {
-  transform: translateY(0) scale(0.96);
-  box-shadow: 0 4px 12px rgba(11, 46, 107, 0.08);
+  transform: scale(0.98);
 }
 
-.card img {
+.inner {
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  background: #ffffff;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  z-index: 1;
+}
+
+.borderWrapper {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 2;
+  overflow: hidden;
+}
+
+.borderFlow {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 250%;
+  height: 250%;
+  transform: translate(-50%, -50%) rotate(0deg);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.card[data-in-view="true"] .borderFlow {
+  opacity: 1;
+  animation: spin linear infinite;
+}
+
+@keyframes spin {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* TIER: FREE */
+.free {
+  --base-scale: 1;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+}
+.free:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+.free .borderWrapper {
+  background: rgba(156, 163, 175, 0.2);
+}
+.free .borderFlow {
+  background: conic-gradient(transparent 70%, rgba(156, 163, 175, 0.4) 100%);
+  animation-duration: 6s;
+}
+
+/* TIER: STANDARD */
+.standard {
+  --base-scale: 1;
+  box-shadow: 0 2px 10px rgba(11, 46, 107, 0.05);
+}
+.standard:hover {
+  box-shadow: 0 8px 24px rgba(11, 46, 107, 0.12);
+}
+.standard .borderWrapper {
+  background: rgba(11, 46, 107, 0.1);
+}
+.standard .borderFlow {
+  background: conic-gradient(transparent 40%, rgba(11, 46, 107, 0.8) 100%);
+  animation-duration: 4s;
+}
+
+/* TIER: PREMIUM */
+.premium {
+  --base-scale: 1.05;
+  box-shadow: 0 4px 16px rgba(212, 175, 55, 0.08);
+}
+.premium:hover {
+  box-shadow: 0 12px 32px rgba(212, 175, 55, 0.2);
+}
+.premium .borderWrapper {
+  background: rgba(212, 175, 55, 0.15);
+  padding: 2px;
+}
+.premium .borderFlow {
+  background: conic-gradient(transparent 25%, #D4AF37 85%, #fff 100%);
+  animation-duration: 3s;
+}
+
+/* TIER: DIAMOND */
+.diamond {
+  --base-scale: 1.10;
+  box-shadow: 0 0 16px rgba(125, 211, 252, 0.25);
+  z-index: 10;
+}
+.diamond:hover {
+  box-shadow: 0 0 32px rgba(125, 211, 252, 0.45);
+}
+.diamond .borderWrapper {
+  background: rgba(125, 211, 252, 0.2);
+  padding: 2px;
+}
+.diamond .borderFlow {
+  background: conic-gradient(
+    transparent 10%, 
+    #7DD3FC 40%, 
+    #ffffff 50%, 
+    #7DD3FC 60%, 
+    transparent 90%
+  );
+  animation-duration: 2s;
+}
+
+/* SHINE EFFECTS */
+.shineSweep {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(212, 175, 55, 0.03) 40%,
+    rgba(255, 255, 255, 0.5) 50%,
+    rgba(212, 175, 55, 0.03) 60%,
+    transparent 100%
+  );
+  transform: translateX(-150%) skewX(-30deg);
+  pointer-events: none;
+  z-index: 3;
+}
+.card[data-in-view="true"] .shineSweep {
+  animation: sweep 9s ease-in-out infinite;
+}
+@keyframes sweep {
+  0%, 70% { transform: translateX(-150%) skewX(-30deg); }
+  100% { transform: translateX(250%) skewX(-30deg); }
+}
+
+.diamondShine {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 20%,
+    rgba(125, 211, 252, 0.08) 40%,
+    rgba(255, 255, 255, 0.7) 50%,
+    rgba(125, 211, 252, 0.08) 60%,
+    transparent 80%
+  );
+  transform: translateX(-150%) skewX(-20deg);
+  pointer-events: none;
+  z-index: 3;
+}
+.card[data-in-view="true"] .diamondShine {
+  animation: d-shine 5s ease-in-out infinite;
+}
+@keyframes d-shine {
+  0%, 60% { transform: translateX(-150%) skewX(-20deg); }
+  100% { transform: translateX(250%) skewX(-20deg); }
+}
+
+/* CONTENT */
+.logoImage {
   width: 100%;
   height: 100%;
   object-fit: contain;
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 2;
+  transform: scale(var(--base-scale, 1));
 }
-
-.card:hover img {
-  transform: scale(1.05);
+.card:hover .logoImage {
+  transform: scale(calc(var(--base-scale, 1) + 0.03));
 }
 
 .placeholder {
@@ -71,9 +203,44 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.6rem;
+  font-size: 2rem;
   font-weight: 700;
-  color: #aaa;
-  background: #f5f5f7;
+  color: #ccc;
+  background: #fcfcfd;
   border-radius: 8px;
+  z-index: 2;
+  transform: scale(var(--base-scale, 1));
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.card:hover .placeholder {
+  transform: scale(calc(var(--base-scale, 1) + 0.03));
+}
+
+/* INFO ICON */
+.infoIcon {
+  position: absolute;
+  bottom: 6px;
+  right: 6px;
+  width: 18px;
+  height: 18px;
+  background: rgba(0, 0, 0, 0.04);
+  color: #999;
+  border-radius: 50%;
+  font-family: serif;
+  font-style: italic;
+  font-size: 10px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.5;
+  transition: opacity 0.2s, background 0.2s, color 0.2s, transform 0.2s;
+  pointer-events: none;
+  z-index: 4;
+}
+.card:hover .infoIcon {
+  opacity: 1;
+  background: #0B2E6B;
+  color: #fff;
+  transform: scale(1.1);
 }
