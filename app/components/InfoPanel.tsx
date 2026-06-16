@@ -1,5 +1,5 @@
 'use client';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import styles from './InfoPanel.module.css';
 
@@ -8,6 +8,45 @@ interface Props {
   onClose: () => void;
   mode?: 'desktop' | 'mobile';
 }
+
+function AnimatedCounter({ end, duration = 1500 }: { end: number, duration?: number }) {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    let startTime: number | null = null;
+    let animationFrame: number;
+
+    const animate = (timestamp: number) => {
+      if (!startTime) startTime = timestamp;
+      const progress = timestamp - startTime;
+      const percentage = Math.min(progress / duration, 1);
+      
+      const easeProgress = percentage === 1 ? 1 : 1 - Math.pow(2, -10 * percentage);
+      
+      setCount(Math.floor(end * easeProgress));
+
+      if (progress < duration) {
+        animationFrame = requestAnimationFrame(animate);
+      } else {
+        setCount(end);
+      }
+    };
+
+    animationFrame = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(animationFrame);
+  }, [end, duration]);
+
+  return <>{count}</>;
+}
+
+const FloatingOrbs = () => (
+  <div className={styles.orbsContainer}>
+    <div className={styles.orb1}></div>
+    <div className={styles.orb2}></div>
+    <div className={styles.orb3}></div>
+    <div className={styles.orb4}></div>
+  </div>
+);
 
 export default function InfoPanel({ brand, onClose, mode = 'mobile' }: Props) {
   const uploads = brand.logo_uploads || [];
@@ -37,19 +76,47 @@ export default function InfoPanel({ brand, onClose, mode = 'mobile' }: Props) {
     alert('Đã copy link!');
   };
 
+  const tier = (brand.package_type || 'free').toLowerCase();
+
   const panelContent = (
-    <>
+    <div className={`${styles.panelInnerWrapper} ${styles[tier]}`}>
       <div className={styles.cover}>
-        {brand.cover_url && <img src={brand.cover_url} alt="Cover" />}
+        {tier === 'diamond' && (
+          <>
+            <div className={styles.diamondSpotlight}></div>
+            <FloatingOrbs />
+          </>
+        )}
+        {brand.cover_url ? (
+          <img src={brand.cover_url} alt="Cover" className={styles.coverImg} />
+        ) : (
+          <div className={styles.coverPlaceholder}></div>
+        )}
         <button onClick={onClose} className={styles.closeBtn}>✕</button>
       </div>
       
-      <div className={styles.logoWrap}>
-        {logoUrl
-          // eslint-disable-next-line @next/next/no-img-element
-          ? <img src={logoUrl} alt={brand.name} />
-          : <div className={styles.placeholder}>{brand.name?.charAt(0)?.toUpperCase()}</div>
-        }
+      <div className={`${styles.logoWrap} ${styles[`${tier}LogoWrap`] || ''}`}>
+        <div className={styles.borderWrapper}>
+          {tier === 'standard' && <div className={styles.standardBorderFlow}></div>}
+          {tier === 'premium' && <div className={styles.premiumBorderFlow}></div>}
+          {tier === 'diamond' && <div className={styles.diamondBorderFlow}></div>}
+        </div>
+
+        {tier === 'premium' && <div className={styles.premiumShine}></div>}
+        {tier === 'diamond' && <div className={styles.diamondHalo}></div>}
+
+        <div className={styles.logoInner}>
+          {logoUrl
+            // eslint-disable-next-line @next/next/no-img-element
+            ? <img src={logoUrl} alt={brand.name} className={tier === 'diamond' ? styles.breathingLogo : ''} />
+            : <div className={`${styles.placeholder} ${tier === 'diamond' ? styles.breathingLogo : ''}`}>{brand.name?.charAt(0)?.toUpperCase()}</div>
+          }
+        </div>
+
+        {/* Badges */}
+        {tier === 'standard' && <div className={styles.badgeStandard}>✓ Verified</div>}
+        {tier === 'premium' && <div className={styles.badgePremium}>⭐ Featured Brand</div>}
+        {tier === 'diamond' && <div className={styles.badgeDiamond}>💎 Elite Partner</div>}
       </div>
 
       <div className={styles.content}>
@@ -60,12 +127,14 @@ export default function InfoPanel({ brand, onClose, mode = 'mobile' }: Props) {
         </div>
 
         <div className={styles.statsRow}>
-          <div className={`${styles.statItem} ${styles.view}`}>
-            <div className={styles.statValue}>{clicks}</div>
+          <div className={`${styles.statItem} ${styles.view} ${tier === 'diamond' ? styles.diamondStat : ''}`}>
+            <div className={styles.statValue}>
+              {tier === 'diamond' ? <AnimatedCounter end={clicks} /> : clicks}
+            </div>
             <div className={styles.statLabel}>Lượt xem</div>
           </div>
           <div className={`${styles.statItem} ${styles.hot}`}>
-            <div className={styles.statValue} style={{ fontSize: '1rem', color: '#d97706' }}>{hotness}</div>
+            <div className={styles.statValue} style={{ fontSize: '1rem', color: tier === 'diamond' ? '#10b981' : '#d97706' }}>{hotness}</div>
             <div className={styles.statLabel}>Độ hot</div>
           </div>
         </div>
@@ -97,11 +166,11 @@ export default function InfoPanel({ brand, onClose, mode = 'mobile' }: Props) {
           }}>🔗 Copy Link</button>
         </div>
 
-        <Link href={`/brand/${brand.slug}`} className={styles.primaryBtn}>
+        <Link href={`/brand/${brand.slug}`} className={`${styles.primaryBtn} ${styles[`${tier}Btn`] || ''}`}>
           Xem chi tiết & Claim Brand
         </Link>
       </div>
-    </>
+    </div>
   );
 
   if (mode === 'desktop') {
