@@ -118,7 +118,7 @@ export default function InfoPanel({ brand, onClose, mode = 'mobile' }: Props) {
 
         {/* Badges */}
         {tier === 'standard' && <div className={styles.badgeStandard}>✓ Verified</div>}
-        {tier === 'premium' && <div className={styles.badgePremium}>⭐ Featured Brand</div>}
+        {tier === 'premium' && <div className={styles.badgePremium}><span className={styles.starGlow}>⭐</span> Featured Brand</div>}
         {tier === 'diamond' && <div className={styles.badgeDiamond}>💎 Elite Partner</div>}
       </div>
 

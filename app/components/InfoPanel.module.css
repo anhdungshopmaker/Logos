@@ -159,11 +159,20 @@
   transform: translateX(-150%) skewX(-30deg);
   pointer-events: none;
   z-index: 3;
-  animation: shine 8s ease-in-out infinite;
+  animation: shine 4s ease-in-out infinite;
 }
 @keyframes shine {
   0%, 70% { transform: translateX(-150%) skewX(-30deg); }
   100% { transform: translateX(250%) skewX(-30deg); }
+}
+
+.starGlow {
+  display: inline-block;
+  animation: starPulse 1.5s ease-in-out infinite alternate;
+}
+@keyframes starPulse {
+  0% { filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.4)) scale(1); }
+  100% { filter: drop-shadow(0 0 8px rgba(255, 255, 255, 1)) scale(1.15); }
 }
 
 /* DIAMOND */
