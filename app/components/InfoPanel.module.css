@@ -96,6 +96,26 @@
 /* Tier Specifics */
 
 /* STANDARD */
+.standardScanline {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.9), transparent);
+  box-shadow: 0 0 12px rgba(11, 46, 107, 0.8), 0 0 4px rgba(255,255,255,0.8);
+  z-index: 5;
+  pointer-events: none;
+  animation: scan 2.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@keyframes scan {
+  0% { top: -10px; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { top: 130px; opacity: 0; }
+}
+
 .standardLogoWrap {
   box-shadow: 0 4px 16px rgba(11, 46, 107, 0.15);
 }

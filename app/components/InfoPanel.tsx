@@ -83,6 +83,7 @@ export default function InfoPanel({ brand, onClose, mode = 'mobile' }: Props) {
   const panelContent = (
     <div className={`${styles.panelInnerWrapper} ${styles[tier]}`}>
       <div className={styles.cover}>
+        {tier === 'standard' && <div className={styles.standardScanline}></div>}
         {tier === 'diamond' && (
           <>
             <div className={styles.diamondSpotlight}></div>
