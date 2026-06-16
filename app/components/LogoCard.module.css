@@ -128,13 +128,15 @@
 }
 .diamond .borderFlow {
   background: conic-gradient(
-    transparent 10%, 
-    #7DD3FC 40%, 
-    #ffffff 50%, 
-    #7DD3FC 60%, 
-    transparent 90%
+    transparent 0%,
+    transparent 45%,
+    rgba(125, 211, 252, 0.4) 49%,
+    #ffffff 50%,
+    rgba(125, 211, 252, 0.4) 51%,
+    transparent 55%,
+    transparent 100%
   );
-  animation-duration: 2s;
+  animation-duration: 14s;
 }
 
 /* SHINE EFFECTS */
@@ -161,27 +163,17 @@
   100% { transform: translateX(250%) skewX(-30deg); }
 }
 
-.diamondShine {
+.diamondSpotlight {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    105deg,
-    transparent 20%,
-    rgba(125, 211, 252, 0.08) 40%,
-    rgba(255, 255, 255, 0.7) 50%,
-    rgba(125, 211, 252, 0.08) 60%,
-    transparent 80%
+  background: radial-gradient(
+    circle at 50% 0%, 
+    #ffffff 0%, 
+    transparent 70%
   );
-  transform: translateX(-150%) skewX(-20deg);
+  opacity: 0.04;
   pointer-events: none;
   z-index: 3;
-}
-.card[data-in-view="true"] .diamondShine {
-  animation: d-shine 5s ease-in-out infinite;
-}
-@keyframes d-shine {
-  0%, 60% { transform: translateX(-150%) skewX(-20deg); }
-  100% { transform: translateX(250%) skewX(-20deg); }
 }
 
 /* CONTENT */

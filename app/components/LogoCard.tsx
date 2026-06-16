@@ -54,7 +54,7 @@ export default function LogoCard({ brand, onClick }: Props) {
       
       <div className={styles.inner}>
         {tier === 'premium' && <div className={styles.shineSweep}></div>}
-        {tier === 'diamond' && <div className={styles.diamondShine}></div>}
+        {tier === 'diamond' && <div className={styles.diamondSpotlight}></div>}
 
         {logoUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
