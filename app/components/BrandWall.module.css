@@ -45,16 +45,16 @@
 }
 
 .hero {
-  padding: 40px 24px 20px;
+  padding: 24px 24px 12px;
   text-align: center;
   background: transparent;
 }
 
 .heroTitle {
-  font-size: 2.2rem;
+  font-size: 1.8rem;
   font-weight: 900;
   letter-spacing: -0.03em;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
   color: var(--text);
   background: linear-gradient(135deg, var(--primary), #1e40af);
   -webkit-background-clip: text;
@@ -62,25 +62,25 @@
 }
 
 .heroSubtitle {
-  font-size: 1.05rem;
+  font-size: 0.95rem;
   color: var(--muted);
   max-width: 600px;
-  margin: 0 auto 24px;
-  line-height: 1.5;
+  margin: 0 auto 16px;
+  line-height: 1.4;
 }
 
 .searchWrap {
   max-width: 600px;
-  margin: 0 auto 24px;
+  margin: 0 auto 16px;
   position: relative;
 }
 
 .heroSearch {
   width: 100%;
-  padding: 14px 20px;
-  border-radius: 16px;
+  padding: 12px 16px;
+  border-radius: 12px;
   border: 1px solid var(--border);
-  font-size: 1.05rem;
+  font-size: 0.95rem;
   font-family: inherit;
   outline: none;
   background: #fff;
@@ -95,9 +95,9 @@
 
 .categories {
   display: flex;
-  gap: 12px;
+  gap: 8px;
   overflow-x: auto;
-  padding-bottom: 12px;
+  padding-bottom: 8px;
   max-width: 100%;
   justify-content: center;
   -ms-overflow-style: none;
@@ -108,11 +108,11 @@
 }
 
 .categoryTag {
-  padding: 8px 18px;
+  padding: 6px 14px;
   background: rgba(11, 46, 107, 0.04);
   border: 1px solid rgba(11, 46, 107, 0.08);
-  border-radius: 12px;
-  font-size: 0.95rem;
+  border-radius: 10px;
+  font-size: 0.85rem;
   font-weight: 600;
   color: var(--primary);
   cursor: pointer;
