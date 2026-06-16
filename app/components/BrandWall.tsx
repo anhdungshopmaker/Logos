@@ -141,7 +141,7 @@ export default function BrandWall({
               <div className={styles.searchWrap}>
                 <input
                   className={styles.heroSearch}
-                  placeholder="🔍 Tìm spa, nail, khách sạn, nhà hàng..."
+                  placeholder="🔍 Tìm nhà hàng, khách sạn, dịch vụ, công nghệ..."
                   value={search}
                   onChange={e => setSearch(e.target.value)}
                 />
