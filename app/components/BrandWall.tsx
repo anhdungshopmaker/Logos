@@ -68,7 +68,13 @@ export default function BrandWall({
 
     if (initialProvince) query = query.ilike('province', `%${initialProvince}%`);
     if (initialIndustry) query = query.ilike('industry', `%${initialIndustry}%`);
-    if (q) query = query.ilike('name', `%${q}%`);
+    if (q) {
+      if (q === 'Dịch vụ') {
+        query = query.or('name.ilike.%Spa%,name.ilike.%Nail%,name.ilike.%Barber%,name.ilike.%Dịch vụ%');
+      } else {
+        query = query.ilike('name', `%${q}%`);
+      }
+    }
 
     const { data } = await query;
     return data || [];
@@ -142,14 +148,12 @@ export default function BrandWall({
               </div>
               <div className={styles.categories}>
                 {[
-                  { id: 'Spa', label: '💅 Spa' },
-                  { id: 'Nail', label: '💅 Nail' },
-                  { id: 'Barber', label: '✂️ Barber' },
                   { id: 'Khách sạn', label: '🏨 Khách sạn' },
                   { id: 'Nhà hàng', label: '🍽️ Nhà hàng' },
                   { id: 'Công nghệ', label: '💻 Công nghệ' },
                   { id: 'Giáo dục', label: '📚 Giáo dục' },
                   { id: 'Thời trang', label: '👗 Thời trang' },
+                  { id: 'Dịch vụ', label: '💆‍♀️ Dịch vụ' },
                 ].map(cat => (
                   <button 
                     key={cat.id} 
