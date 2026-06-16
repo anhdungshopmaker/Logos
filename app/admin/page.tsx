@@ -126,6 +126,14 @@ export default function AdminDashboard() {
 
   return (
     <div className={styles.layout}>
+      {/* Mobile Header */}
+      <div className={styles.mobileHeader}>
+        <div className={styles.sidebarLogo} style={{ marginBottom: 0 }}>🛡️ Admin Panel</div>
+        <button className={`${styles.navItem} ${styles.logoutBtn}`} onClick={handleLogout} style={{ width: 'auto', padding: '6px 12px' }}>
+          Đăng xuất
+        </button>
+      </div>
+
       {/* Sidebar */}
       <div className={styles.sidebar}>
         <div className={styles.sidebarLogo}>🛡️ Admin Panel</div>
@@ -148,7 +156,7 @@ export default function AdminDashboard() {
           🌐 Xem trang chủ
         </Link>
         <div className={styles.spacer} />
-        <div style={{ fontSize: '0.8rem', color: '#555', padding: '8px 12px' }}>{userEmail}</div>
+        <div className={styles.userEmail}>{userEmail}</div>
         <button className={`${styles.navItem} ${styles.logoutBtn}`} onClick={handleLogout}>
           🚪 Đăng xuất
         </button>
@@ -161,49 +169,51 @@ export default function AdminDashboard() {
             <h1 className={styles.pageTitle}>Chờ Duyệt</h1>
             {loading ? <div className={styles.empty}>Đang tải...</div> :
               brands.length === 0 ? <div className={styles.empty}>✅ Không có thương hiệu nào đang chờ duyệt!</div> :
-              <table className={styles.table}>
-                <thead>
-                  <tr>
-                    <th>Logo</th>
-                    <th>Thương hiệu</th>
-                    <th>Tỉnh</th>
-                    <th>Ngành</th>
-                    <th>Ngày đăng</th>
-                    <th>Hành động</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {brands.map(b => {
-                    const uploads = b.logo_uploads || [];
-                    const latestLogo = uploads[uploads.length - 1];
-                    const logoUrl = latestLogo?.url_64 ? `${latestLogo.url_64}${latestLogo.url_64.includes('?') ? '&' : '?'}t=${Date.now()}` : '';
-                    return (
-                    <tr key={b.id}>
-                      <td>
-                        {logoUrl
-                          // eslint-disable-next-line @next/next/no-img-element
-                          ? <img src={logoUrl} alt="" className={styles.logoThumb} />
-                          : <div className={styles.logoPlaceholder}>{b.name?.charAt(0)}</div>}
-                      </td>
-                      <td>
-                        <div style={{ fontWeight: 600, color: '#111' }}>{b.name}</div>
-                        <div style={{ fontSize: '0.8rem', color: '#666' }}>{b.slug}</div>
-                      </td>
-                      <td>{b.province || '—'}</td>
-                      <td>{b.industry || '—'}</td>
-                      <td style={{ color: '#666', fontSize: '0.82rem' }}>{new Date(b.created_at).toLocaleDateString('vi-VN')}</td>
-                      <td>
-                        <div className={styles.actions}>
-                          <button className={styles.approveBtn} onClick={() => handleStatus(b.id, 'approved')}>✅ Duyệt</button>
-                          <button className={styles.rejectBtn} onClick={() => handleStatus(b.id, 'rejected')}>❌ Từ chối</button>
-                          <Link href={`/admin/brands/${b.id}`} className={styles.editBtn}>✏️ Sửa</Link>
-                        </div>
-                      </td>
+              <div className={styles.tableWrapper}>
+                <table className={styles.table}>
+                  <thead>
+                    <tr>
+                      <th>Logo</th>
+                      <th>Thương hiệu</th>
+                      <th>Tỉnh</th>
+                      <th>Ngành</th>
+                      <th>Ngày đăng</th>
+                      <th>Hành động</th>
                     </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {brands.map(b => {
+                      const uploads = b.logo_uploads || [];
+                      const latestLogo = uploads[uploads.length - 1];
+                      const logoUrl = latestLogo?.url_64 ? `${latestLogo.url_64}${latestLogo.url_64.includes('?') ? '&' : '?'}t=${Date.now()}` : '';
+                      return (
+                      <tr key={b.id}>
+                        <td>
+                          {logoUrl
+                            // eslint-disable-next-line @next/next/no-img-element
+                            ? <img src={logoUrl} alt="" className={styles.logoThumb} />
+                            : <div className={styles.logoPlaceholder}>{b.name?.charAt(0)}</div>}
+                        </td>
+                        <td>
+                          <div style={{ fontWeight: 600, color: '#111' }}>{b.name}</div>
+                          <div style={{ fontSize: '0.8rem', color: '#666' }}>{b.slug}</div>
+                        </td>
+                        <td>{b.province || '—'}</td>
+                        <td>{b.industry || '—'}</td>
+                        <td style={{ color: '#666', fontSize: '0.82rem', whiteSpace: 'nowrap' }}>{new Date(b.created_at).toLocaleDateString('vi-VN')}</td>
+                        <td>
+                          <div className={styles.actions}>
+                            <button className={styles.approveBtn} onClick={() => handleStatus(b.id, 'approved')}>✅ Duyệt</button>
+                            <button className={styles.rejectBtn} onClick={() => handleStatus(b.id, 'rejected')}>❌ Từ chối</button>
+                            <Link href={`/admin/brands/${b.id}`} className={styles.editBtn}>✏️ Sửa</Link>
+                          </div>
+                        </td>
+                      </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
             }
           </>
         )}
@@ -213,64 +223,66 @@ export default function AdminDashboard() {
             <h1 className={styles.pageTitle}>{tab === 'all' ? 'Tất cả Thương Hiệu' : 'Đã từ chối'}</h1>
             {loading ? <div className={styles.empty}>Đang tải...</div> :
               brands.length === 0 ? <div className={styles.empty}>Không có dữ liệu</div> :
-              <table className={styles.table}>
-                <thead>
-                  <tr>
-                    <th>Logo</th>
-                    <th>Tên</th>
-                    <th>Tỉnh</th>
-                    <th>Trạng thái</th>
-                    <th>Gói</th>
-                    <th>Clicks</th>
-                    <th>Hành động</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {brands.map(b => {
-                    const uploads = b.logo_uploads || [];
-                    const latestLogo = uploads[uploads.length - 1];
-                    const logoUrl = latestLogo?.url_64 ? `${latestLogo.url_64}${latestLogo.url_64.includes('?') ? '&' : '?'}t=${Date.now()}` : '';
-                    return (
-                    <tr key={b.id}>
-                      <td>
-                        {logoUrl
-                          // eslint-disable-next-line @next/next/no-img-element
-                          ? <img src={logoUrl} alt="" className={styles.logoThumb} />
-                          : <div className={styles.logoPlaceholder}>{b.name?.charAt(0)}</div>}
-                      </td>
-                      <td>
-                        <div style={{ fontWeight: 600, color: '#111' }}>{b.name}</div>
-                        <div style={{ fontSize: '0.8rem', color: '#666' }}>{b.slug}</div>
-                      </td>
-                      <td>{b.province || '—'}</td>
-                      <td>
-                        <span className={`${styles.badge} ${styles[b.status as keyof typeof styles] || ''}`}>
-                          {b.status === 'approved' ? '✅ Đã duyệt' : b.status === 'pending' ? '🕐 Chờ duyệt' : '❌ Từ chối'}
-                        </span>
-                      </td>
-                      <td>
-                        <select
-                          className={styles.prioritySelect}
-                          value={b.package_type || 'free'}
-                          onChange={e => handlePriority(b.id, e.target.value)}
-                        >
-                          {PACKAGE_OPTIONS.map(p => <option key={p.value} value={p.value}>{p.label}</option>)}
-                        </select>
-                      </td>
-                      <td style={{ color: '#888' }}>{b.click_count || 0}</td>
-                      <td>
-                        <div className={styles.actions}>
-                          {b.status !== 'approved' && <button className={styles.approveBtn} onClick={() => handleStatus(b.id, 'approved')}>✅ Duyệt</button>}
-                          {b.status !== 'rejected' && <button className={styles.rejectBtn} onClick={() => handleStatus(b.id, 'rejected')}>❌ Từ chối</button>}
-                          {tab === 'rejected' && <button className={styles.deleteBtn} onClick={() => handleDelete(b.id)}>🗑️ Xóa vĩnh viễn</button>}
-                          <Link href={`/admin/brands/${b.id}`} className={styles.editBtn}>✏️ Sửa</Link>
-                        </div>
-                      </td>
+              <div className={styles.tableWrapper}>
+                <table className={styles.table}>
+                  <thead>
+                    <tr>
+                      <th>Logo</th>
+                      <th>Tên</th>
+                      <th>Tỉnh</th>
+                      <th>Trạng thái</th>
+                      <th>Gói</th>
+                      <th>Clicks</th>
+                      <th>Hành động</th>
                     </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {brands.map(b => {
+                      const uploads = b.logo_uploads || [];
+                      const latestLogo = uploads[uploads.length - 1];
+                      const logoUrl = latestLogo?.url_64 ? `${latestLogo.url_64}${latestLogo.url_64.includes('?') ? '&' : '?'}t=${Date.now()}` : '';
+                      return (
+                      <tr key={b.id}>
+                        <td>
+                          {logoUrl
+                            // eslint-disable-next-line @next/next/no-img-element
+                            ? <img src={logoUrl} alt="" className={styles.logoThumb} />
+                            : <div className={styles.logoPlaceholder}>{b.name?.charAt(0)}</div>}
+                        </td>
+                        <td>
+                          <div style={{ fontWeight: 600, color: '#111', whiteSpace: 'nowrap' }}>{b.name}</div>
+                          <div style={{ fontSize: '0.8rem', color: '#666' }}>{b.slug}</div>
+                        </td>
+                        <td style={{ whiteSpace: 'nowrap' }}>{b.province || '—'}</td>
+                        <td>
+                          <span className={`${styles.badge} ${styles[b.status as keyof typeof styles] || ''}`}>
+                            {b.status === 'approved' ? '✅ Đã duyệt' : b.status === 'pending' ? '🕐 Chờ duyệt' : '❌ Từ chối'}
+                          </span>
+                        </td>
+                        <td>
+                          <select
+                            className={styles.prioritySelect}
+                            value={b.package_type || 'free'}
+                            onChange={e => handlePriority(b.id, e.target.value)}
+                          >
+                            {PACKAGE_OPTIONS.map(p => <option key={p.value} value={p.value}>{p.label}</option>)}
+                          </select>
+                        </td>
+                        <td style={{ color: '#888' }}>{b.click_count || 0}</td>
+                        <td>
+                          <div className={styles.actions}>
+                            {b.status !== 'approved' && <button className={styles.approveBtn} onClick={() => handleStatus(b.id, 'approved')}>✅ Duyệt</button>}
+                            {b.status !== 'rejected' && <button className={styles.rejectBtn} onClick={() => handleStatus(b.id, 'rejected')}>❌ Từ chối</button>}
+                            {tab === 'rejected' && <button className={styles.deleteBtn} onClick={() => handleDelete(b.id)}>🗑️ Xóa vĩnh viễn</button>}
+                            <Link href={`/admin/brands/${b.id}`} className={styles.editBtn}>✏️ Sửa</Link>
+                          </div>
+                        </td>
+                      </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
             }
           </>
         )}
@@ -312,48 +324,50 @@ export default function AdminDashboard() {
             <h1 className={styles.pageTitle}>Yêu cầu Claim Thương Hiệu</h1>
             {loading ? <div className={styles.empty}>Đang tải...</div> :
               claims.length === 0 ? <div className={styles.empty}>Không có yêu cầu nào</div> :
-              <table className={styles.table}>
-                <thead>
-                  <tr>
-                    <th>Thương hiệu</th>
-                    <th>User ID</th>
-                    <th>Minh chứng</th>
-                    <th>Ngày gửi</th>
-                    <th>Trạng thái</th>
-                    <th>Hành động</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {claims.map(c => (
-                    <tr key={c.id}>
-                      <td>
-                        <div style={{ fontWeight: 600 }}>{c.brand?.name}</div>
-                        <div style={{ fontSize: '0.8rem', color: '#666' }}>{c.brand?.slug}</div>
-                      </td>
-                      <td style={{ fontSize: '0.85rem' }}>{c.user_id}</td>
-                      <td>
-                        <a href={c.proof_url} target="_blank" rel="noopener noreferrer" style={{ color: '#0ea5e9', textDecoration: 'underline' }}>Xem link</a>
-                      </td>
-                      <td style={{ color: '#666', fontSize: '0.82rem' }}>{new Date(c.created_at).toLocaleDateString('vi-VN')}</td>
-                      <td>
-                        <span className={`${styles.badge} ${styles[c.status as keyof typeof styles] || ''}`}>
-                          {c.status === 'approved' ? '✅ Đã duyệt' : c.status === 'pending' ? '🕐 Chờ duyệt' : '❌ Từ chối'}
-                        </span>
-                      </td>
-                      <td>
-                        <div className={styles.actions}>
-                          {c.status === 'pending' && (
-                            <>
-                              <button className={styles.approveBtn} onClick={() => handleClaimAction(c.id, 'approve', c.brand_id, c.user_id)}>✅ Duyệt (Giao quyền)</button>
-                              <button className={styles.rejectBtn} onClick={() => handleClaimAction(c.id, 'reject', c.brand_id, c.user_id)}>❌ Từ chối</button>
-                            </>
-                          )}
-                        </div>
-                      </td>
+              <div className={styles.tableWrapper}>
+                <table className={styles.table}>
+                  <thead>
+                    <tr>
+                      <th>Thương hiệu</th>
+                      <th>User ID</th>
+                      <th>Minh chứng</th>
+                      <th>Ngày gửi</th>
+                      <th>Trạng thái</th>
+                      <th>Hành động</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {claims.map(c => (
+                      <tr key={c.id}>
+                        <td>
+                          <div style={{ fontWeight: 600, whiteSpace: 'nowrap' }}>{c.brand?.name}</div>
+                          <div style={{ fontSize: '0.8rem', color: '#666' }}>{c.brand?.slug}</div>
+                        </td>
+                        <td style={{ fontSize: '0.85rem' }}>{c.user_id}</td>
+                        <td>
+                          <a href={c.proof_url} target="_blank" rel="noopener noreferrer" style={{ color: '#0ea5e9', textDecoration: 'underline', whiteSpace: 'nowrap' }}>Xem link</a>
+                        </td>
+                        <td style={{ color: '#666', fontSize: '0.82rem', whiteSpace: 'nowrap' }}>{new Date(c.created_at).toLocaleDateString('vi-VN')}</td>
+                        <td>
+                          <span className={`${styles.badge} ${styles[c.status as keyof typeof styles] || ''}`}>
+                            {c.status === 'approved' ? '✅ Đã duyệt' : c.status === 'pending' ? '🕐 Chờ duyệt' : '❌ Từ chối'}
+                          </span>
+                        </td>
+                        <td>
+                          <div className={styles.actions}>
+                            {c.status === 'pending' && (
+                              <>
+                                <button className={styles.approveBtn} onClick={() => handleClaimAction(c.id, 'approve', c.brand_id, c.user_id)}>✅ Duyệt</button>
+                                <button className={styles.rejectBtn} onClick={() => handleClaimAction(c.id, 'reject', c.brand_id, c.user_id)}>❌ Từ chối</button>
+                              </>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             }
           </>
         )}
